@@ -1,6 +1,4 @@
 # Elev8 Sportswear — Módulo de Gestión de Productos
-
-**Evidencia:** GA7-220501096-AA2-EV01 — Codificación de módulos del software
 **Aprendiz:** Fabián Santiago Gutiérrez
 **Programa:** Análisis y Desarrollo de Software (ADSO) — Ficha 3186615
 **Servicio Nacional de Aprendizaje (SENA)**
@@ -81,7 +79,7 @@ Buenas prácticas adicionales:
    ```
    db.url=jdbc:postgresql://localhost:5432/elev8_sportswear_db
    db.user=postgres
-   db.password=********
+   db.password=
    ```
 3. Compilar y ejecutar con Maven:
    ```

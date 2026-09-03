@@ -1,4 +1,4 @@
-
+upd
 
 CREATE TABLE IF NOT EXISTS productos (
     id_producto        SERIAL PRIMARY KEY,

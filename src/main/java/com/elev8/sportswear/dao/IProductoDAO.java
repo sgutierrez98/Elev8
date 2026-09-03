@@ -18,3 +18,4 @@ public interface IProductoDAO {
 
     boolean eliminarProducto(int idProducto) throws SQLException;
 }
+
