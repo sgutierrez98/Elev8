@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Elev8 Sportswear – Ropa deportiva de alto rendimiento. Tecnología Dry-Fit, compresión y protección UV.">
+  <title>Elev8 Sportswear – Ropa deportiva de alto rendimiento</title>
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <link rel="stylesheet" href="css/pages.css">
+</head>
+<body>
+<div class="announcement-bar" role="banner">🚚 Envío gratis en compras mayores a $150.000 | Usa el cupón ELEV10 para 10% OFF</div>
+<div id="navbar-slot"></div>
+
+<main class="page-content">
+  <!-- HERO -->
+  <section class="hero" id="hero" aria-labelledby="hero-title">
+    <div class="hero-bg">
+      <div class="hero-circle c1"></div>
+      <div class="hero-circle c2"></div>
+      <div class="hero-circle c3"></div>
+    </div>
+    <div class="container hero-inner">
+      <div class="hero-content">
+        <span class="hero-eyebrow">🔥 Nueva Colección 2025</span>
+        <h1 class="hero-title" id="hero-title">
+          Eleva tu<br>
+          <span class="hero-title-accent">rendimiento</span>
+        </h1>
+        <p class="hero-subtitle">Ropa deportiva de alto rendimiento con tecnología Dry-Fit, compresión graduada y protección UV para cada entrenamiento.</p>
+        <div class="hero-actions">
+          <a href="pages/catalogue.html" class="btn btn-primary btn-lg">🛍 Ver colección</a>
+          <a href="pages/catalogue.html?badge=OFERTA" class="btn btn-secondary btn-lg">🏷 Ver ofertas</a>
+        </div>
+        <div class="hero-stats">
+          <div><span class="hero-stat-num">500+</span><span class="hero-stat-lbl">Productos</span></div>
+          <div class="hero-stat-sep"></div>
+          <div><span class="hero-stat-num">4.8★</span><span class="hero-stat-lbl">Calificación</span></div>
+          <div class="hero-stat-sep"></div>
+          <div><span class="hero-stat-num">12K+</span><span class="hero-stat-lbl">Clientes</span></div>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-card">
+          <div class="hero-card-emoji">👕</div>
+          <div class="hero-card-name">Camiseta Dry-Fit Pro</div>
+          <div class="hero-card-price">$89.900</div>
+          <button class="btn btn-primary btn-full" onclick="Store.addToCart({id:1,name:'Camiseta Dry-Fit Pro',price:89900,emoji:'👕',size:'M',color:'#0F0F14'});UI.updateBadges()">Agregar al carrito</button>
+        </div>
+        <div class="hero-float f1">⚡ Tecnología Dry-Fit</div>
+        <div class="hero-float f2">🔥 #1 en ventas</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories-section" aria-labelledby="cats-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" id="cats-title">Categorías</h2>
+        <a href="pages/catalogue.html" class="section-link">Ver todo →</a>
+      </div>
+      <div class="categories-grid" id="categoriesGrid"></div>
+    </div>
+  </section>
+
+  <!-- FEATURED PRODUCTS -->
+  <section style="background:var(--white);padding:var(--sp-16) 0;" aria-labelledby="featured-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" id="featured-title">Más vendidos</h2>
+        <a href="pages/catalogue.html" class="section-link">Ver todo →</a>
+      </div>
+      <div class="grid-4" id="featuredGrid"></div>
+    </div>
+  </section>
+
+  <!-- PROMO BANNER -->
+  <section class="promo-banner" aria-labelledby="promo-title">
+    <div class="container promo-inner">
+      <div>
+        <span class="promo-eyebrow">Oferta especial</span>
+        <h2 class="promo-title" id="promo-title">Hasta 30% OFF en licras y pantalonetas</h2>
+        <p class="promo-text">Solo por tiempo limitado. Envío gratis en compras mayores a $150.000</p>
+        <a href="pages/catalogue.html?badge=OFERTA" class="btn btn-primary btn-lg">Ver ofertas</a>
+      </div>
+      <div class="promo-pills">
+        <div class="promo-pill">🩱 −30%</div>
+        <div class="promo-pill">🩳 −25%</div>
+        <div class="promo-pill">🧥 −20%</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POPULAR PRODUCTS -->
+  <section style="padding:var(--sp-16) 0;" aria-labelledby="popular-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 class="section-title" id="popular-title">Los favoritos</h2>
+        <a href="pages/catalogue.html" class="section-link">Ver todo →</a>
+      </div>
+      <div class="grid-4" id="popularGrid"></div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features-section" aria-labelledby="feat-title">
+    <div class="container">
+      <div class="grid-4">
+        <div class="feature-card"><div class="feature-icon">🚚</div><h3 class="feature-title">Envío gratis</h3><p class="feature-text">En compras mayores a $150.000 a todo Colombia</p></div>
+        <div class="feature-card"><div class="feature-icon">↩️</div><h3 class="feature-title">Devoluciones</h3><p class="feature-text">30 días para cambios sin preguntas</p></div>
+        <div class="feature-card"><div class="feature-icon">🔒</div><h3 class="feature-title">Pago seguro</h3><p class="feature-text">Cifrado SSL. Visa, MC, PSE, Nequi</p></div>
+        <div class="feature-card"><div class="feature-icon">⭐</div><h3 class="feature-title">Garantía</h3><p class="feature-text">6 meses contra defectos de fabricación</p></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div id="footer-slot"></div>
+
+<script src="js/utils.js"></script>
+<script src="js/store.js"></script>
+<script src="js/data.js"></script>
+<script src="js/components.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  // Categories
+  const cg = document.getElementById('categoriesGrid');
+  if (cg) cg.innerHTML = CATEGORIES.map(c => `
+    <a href="pages/catalogue.html?cat=${c.id}" class="cat-card" style="--cat-bg:${c.bg};--cat-accent:${c.accent}">
+      <span class="cat-icon">${c.icon}</span>
+      <div><div class="cat-name">${c.name}</div><div class="cat-count">${c.count} productos</div></div>
+      <span class="cat-arrow">→</span>
+    </a>`).join('');
+
+  // Featured
+  const fg = document.getElementById('featuredGrid');
+  if (fg) fg.innerHTML = Products.getFeatured().slice(0,4).map(p => buildProductCard(p)).join('');
+
+  // Popular
+  const pg = document.getElementById('popularGrid');
+  if (pg) pg.innerHTML = Products.getPopular().map(p => buildProductCard(p)).join('');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mis Favoritos – Elev8 Sportswear</title>
+  <link rel="stylesheet" href="../css/tokens.css">
+  <link rel="stylesheet" href="../css/layout.css">
+  <link rel="stylesheet" href="../css/components.css">
+  <link rel="stylesheet" href="../css/pages.css">
+</head>
+<body>
+<div id="navbar-slot"></div>
+<main class="page-content">
+<div class="container">
+  <nav class="breadcrumb" aria-label="Ruta"><a href="../index.html">Inicio</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Mis Favoritos</span></nav>
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2rem;">
+    <h1 style="font-size:var(--text-3xl);font-weight:900;color:var(--navy);">Mis Favoritos <span id="wishCount" style="font-size:var(--text-xl);color:var(--gray-500);font-weight:400;"></span></h1>
+    <button class="btn btn-outline btn-sm" onclick="if(confirm('¿Limpiar favoritos?')){Store.getWishlist().forEach(p=>Store.toggleWishlist(p));renderWish();}">🗑 Limpiar todo</button>
+  </div>
+  <div id="wishGrid" class="grid-4"></div>
+  <div id="wishEmpty" class="empty-state" style="display:none;">
+    <div class="empty-icon">❤️</div>
+    <h3>Tu lista de favoritos está vacía</h3>
+    <p style="color:var(--gray-500);margin:1rem 0;">Guarda los productos que te gustan para comprarlos después.</p>
+    <a href="catalogue.html" class="btn btn-primary">Ver catálogo</a>
+  </div>
+</div>
+</main>
+<div id="footer-slot"></div>
+<script src="../js/utils.js"></script>
+<script src="../js/store.js"></script>
+<script src="../js/data.js"></script>
+<script src="../js/components.js"></script>
+<script>
+function renderWish(){
+  const items=Store.getWishlist();
+  const count=document.getElementById('wishCount');
+  if(count) count.textContent=items.length>0?`(${items.length})`:'';
+  const grid=document.getElementById('wishGrid');
+  const empty=document.getElementById('wishEmpty');
+  if(!items.length){grid.style.display='none';empty.style.display='block';}
+  else{grid.style.display='';empty.style.display='none';grid.innerHTML=items.map(p=>buildProductCard(p,'../')).join('');}
+  UI.updateBadges();
+}
+document.addEventListener('DOMContentLoaded', renderWish);
+Store.on('wishlist', renderWish);
+</script>
+</body></html>
