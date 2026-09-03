@@ -2,19 +2,7 @@ package com.elev8.sportswear.modelo;
 
 import java.math.BigDecimal;
 
-/**
- * Clase modelo (entidad) que representa un producto del catalogo de
- * Elev8 Sportswear.
- *
- * Corresponde a la clase "Producto" definida en el diagrama de clases
- * elaborado en las evidencias de diseño previas (fase de analisis y diseño
- * del ciclo de vida del software).
- *
- * Estandar de nombramiento aplicado:
- *  - Clase: PascalCase (Producto)
- *  - Atributos y metodos: camelCase (idProducto, obtenerNombreProducto...)
- *  - Paquete: minusculas (com.elev8.sportswear.modelo)
- */
+
 public class Producto {
 
     private int idProducto;

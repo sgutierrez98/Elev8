@@ -3,26 +3,4 @@ Aprendiz: Fabián Santiago Gutiérrez
 Ficha: 3186615
 
 ENLACE DEL REPOSITORIO:
-[ PENDIENTE - pegar aquí el enlace una vez publicado el repositorio, ej: https://github.com/tu-usuario/elev8-modulo-productos ]
-
-------------------------------------------------------------
-INSTRUCCIONES PARA PUBLICAR EL REPOSITORIO EN GITHUB
-------------------------------------------------------------
-El proyecto ya se encuentra inicializado como repositorio Git local,
-con el historial de commits por capa (estructura, configuración,
-modelo, conexión, DAO y vista). Para publicarlo:
-
-1. Crear un repositorio vacío en GitHub, por ejemplo:
-   elev8-modulo-productos
-
-2. Desde la carpeta del proyecto (Elev8_ModuloProductos), ejecutar:
-
-   git remote add origin https://github.com/TU-USUARIO/elev8-modulo-productos.git
-   git branch -M main
-   git push -u origin main
-
-3. Copiar la URL del repositorio (https://github.com/TU-USUARIO/elev8-modulo-productos)
-   y reemplazar el texto "[ PENDIENTE ... ]" de este archivo con dicha URL.
-
-4. Volver a comprimir la carpeta con el archivo actualizado antes de
-   realizar la entrega final en la plataforma SENA Sofia Plus.
+https://github.com/sgutierrez98/Elev8

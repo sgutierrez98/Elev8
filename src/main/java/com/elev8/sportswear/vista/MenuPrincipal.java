@@ -9,18 +9,7 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Scanner;
 
-/**
- * Clase de vista (capa de presentacion en consola) que permite probar
- * de forma interactiva el modulo de gestion de productos de
- * Elev8 Sportswear: insertar, consultar, actualizar y eliminar.
- *
- * Corresponde a los casos de uso: CU-01 Registrar producto,
- * CU-02 Consultar producto(s), CU-03 Actualizar producto,
- * CU-04 Eliminar producto, definidos en las evidencias de diseño previas.
- *
- * Paquete: com.elev8.sportswear.vista
- * Clase: PascalCase -> MenuPrincipal
- */
+
 public class MenuPrincipal {
 
     private static final IProductoDAO productoDAO = new ProductoDAO();

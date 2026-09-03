@@ -1,10 +1,4 @@
--- ============================================================
--- Elev8 Sportswear
--- Script de creacion de tabla: productos
--- Base de datos: PostgreSQL
--- Coherente con el modelo relacional / diagrama entidad-relacion
--- elaborado en las evidencias previas de diseño de base de datos.
--- ============================================================
+
 
 CREATE TABLE IF NOT EXISTS productos (
     id_producto        SERIAL PRIMARY KEY,
@@ -16,7 +10,7 @@ CREATE TABLE IF NOT EXISTS productos (
     stock_disponible    INTEGER        NOT NULL CHECK (stock_disponible >= 0)
 );
 
--- Datos de ejemplo para pruebas del modulo CRUD
+
 INSERT INTO productos (nombre_producto, categoria, talla, marca, precio_unitario, stock_disponible)
 VALUES
     ('Camiseta Running Pro', 'Camisetas', 'M', 'Elev8', 89900.00, 50),

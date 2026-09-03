@@ -10,16 +10,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Implementacion del DAO de Producto. Realiza las operaciones CRUD
- * (Create, Read, Update, Delete) contra la tabla "productos" de la
- * base de datos PostgreSQL de Elev8 Sportswear, usando JDBC con
- * PreparedStatement para prevenir inyeccion SQL.
- *
- * Paquete: com.elev8.sportswear.dao
- * Clase: PascalCase -> ProductoDAO
- * Metodos: camelCase -> insertarProducto, consultarProductoPorId...
- */
+
 public class ProductoDAO implements IProductoDAO {
 
     private static final String SQL_INSERTAR =
@@ -41,9 +32,7 @@ public class ProductoDAO implements IProductoDAO {
     private static final String SQL_ELIMINAR =
             "DELETE FROM productos WHERE id_producto = ?";
 
-    /**
-     * Inserta un nuevo producto en el catalogo de Elev8 Sportswear.
-     */
+
     @Override
     public boolean insertarProducto(Producto producto) throws SQLException {
         try (Connection conexion = ConexionBD.obtenerConexion();
@@ -61,9 +50,7 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
-    /**
-     * Consulta un producto especifico a partir de su identificador.
-     */
+   
     @Override
     public Producto consultarProductoPorId(int idProducto) throws SQLException {
         try (Connection conexion = ConexionBD.obtenerConexion();
@@ -80,9 +67,7 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
-    /**
-     * Consulta el listado completo de productos del catalogo.
-     */
+   
     @Override
     public List<Producto> consultarTodosLosProductos() throws SQLException {
         List<Producto> listaProductos = new ArrayList<>();
@@ -98,9 +83,7 @@ public class ProductoDAO implements IProductoDAO {
         return listaProductos;
     }
 
-    /**
-     * Actualiza los datos de un producto existente.
-     */
+  
     @Override
     public boolean actualizarProducto(Producto producto) throws SQLException {
         try (Connection conexion = ConexionBD.obtenerConexion();
@@ -119,9 +102,7 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
-    /**
-     * Elimina un producto del catalogo a partir de su identificador.
-     */
+    
     @Override
     public boolean eliminarProducto(int idProducto) throws SQLException {
         try (Connection conexion = ConexionBD.obtenerConexion();
@@ -134,10 +115,7 @@ public class ProductoDAO implements IProductoDAO {
         }
     }
 
-    /**
-     * Metodo de apoyo (privado) que transforma una fila del ResultSet
-     * en un objeto Producto.
-     */
+   
     private Producto mapearProducto(ResultSet resultado) throws SQLException {
         Producto producto = new Producto();
         producto.setIdProducto(resultado.getInt("id_producto"));
