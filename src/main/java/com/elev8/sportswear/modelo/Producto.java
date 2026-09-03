@@ -1,4 +1,3 @@
-upd
 package com.elev8.sportswear.modelo;
 
 import java.math.BigDecimal;

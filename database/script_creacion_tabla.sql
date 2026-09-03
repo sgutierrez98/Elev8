@@ -1,5 +1,3 @@
-upd
-
 CREATE TABLE IF NOT EXISTS productos (
     id_producto        SERIAL PRIMARY KEY,
     nombre_producto     VARCHAR(100)   NOT NULL,

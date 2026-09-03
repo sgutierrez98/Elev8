@@ -1,2 +1,1 @@
-upd
 SELECT * FROM productos;
