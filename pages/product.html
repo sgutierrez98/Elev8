@@ -1,146 +1,248 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Producto – Elev8 Sportswear</title>
-  <link rel="stylesheet" href="../css/tokens.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div id="navbar-slot"></div>
-<main class="page-content">
-<div class="container">
-  <nav class="breadcrumb" aria-label="Ruta de navegación">
-    <a href="../index.html">Inicio</a>
-    <span class="breadcrumb-sep" aria-hidden="true">›</span>
-    <a href="catalogue.html">Catálogo</a>
-    <span class="breadcrumb-sep" aria-hidden="true">›</span>
-    <span class="breadcrumb-current" id="pdpBreadcrumb">Producto</span>
-  </nav>
-  <div class="pdp-layout" itemscope itemtype="https://schema.org/Product">
-    <!-- Gallery -->
-    <div>
-      <div class="pdp-gallery-main" id="mainImg" role="img" aria-label="Imagen del producto">👕</div>
-      <div class="pdp-gallery-thumbs" id="thumbs" role="list" aria-label="Imágenes del producto">
-        <div class="pdp-thumb active" role="listitem" onclick="selectThumb(this,'👕')">👕</div>
-        <div class="pdp-thumb" role="listitem" onclick="selectThumb(this,'📦')">📦</div>
-        <div class="pdp-thumb" role="listitem" onclick="selectThumb(this,'🏷')">🏷</div>
-        <div class="pdp-thumb" role="listitem" onclick="selectThumb(this,'✨')">✨</div>
-      </div>
-    </div>
-    <!-- Info -->
-    <div>
-      <p class="pdp-brand" id="pdpBrand">ELEV8</p>
-      <h1 class="pdp-name" id="pdpName" itemprop="name">Cargando...</h1>
-      <div class="pdp-rating" id="pdpRating"></div>
-      <div class="pdp-price-row">
-        <span class="pdp-price-main price" id="pdpPrice" itemprop="price"></span>
-        <span class="price-old" id="pdpOldPrice" style="display:none"></span>
-        <span class="badge badge-green" id="pdpDiscount" style="display:none"></span>
-      </div>
-      <!-- Size -->
-      <p class="pdp-label">Talla <a href="#" style="font-size:.75rem;color:var(--red);margin-left:.5rem;" onclick="return false">Guía de tallas</a></p>
-      <div class="size-selector" id="sizeSelector"></div>
-      <!-- Color -->
-      <p class="pdp-label" style="margin-top:1rem;">Color: <span id="colorLabel" style="font-weight:400;color:var(--gray-600);">Negro</span></p>
-      <div class="color-selector" id="colorSelector"></div>
-      <!-- Qty -->
-      <p class="pdp-label" style="margin-top:1rem;">Cantidad</p>
-      <div class="qty-stepper" role="group" aria-label="Cantidad">
-        <button class="qty-btn" onclick="changeQty(-1)" aria-label="Reducir cantidad">−</button>
-        <span class="qty-num" id="qtyNum">1</span>
-        <button class="qty-btn" onclick="changeQty(1)" aria-label="Aumentar cantidad">+</button>
-      </div>
-      <p style="font-size:.8rem;color:var(--gray-500);margin-top:.5rem;" id="stockLabel"></p>
-      <!-- CTAs -->
-      <div class="pdp-ctas" style="margin-top:1.5rem;">
-        <button class="btn btn-primary btn-lg" id="addCartBtn" onclick="addToCartPDP()">🛒 Agregar al carrito</button>
-        <button class="btn btn-outline" id="wishBtn" onclick="toggleWishPDP()" aria-label="Favorito" style="padding:12px 16px;font-size:1.2rem;">🤍</button>
-      </div>
-      <a href="cart.html" class="btn btn-outline btn-full" style="margin-top:.75rem;">⚡ Comprar ahora</a>
-      <!-- Guarantees -->
-      <div class="pdp-guarantee" style="margin-top:1.5rem;">
-        <div class="guarantee-item"><span class="guarantee-icon">🚚</span> Envío gratis en compras mayores a $150.000</div>
-        <div class="guarantee-item"><span class="guarantee-icon">↩️</span> 30 días para devoluciones sin preguntas</div>
-        <div class="guarantee-item"><span class="guarantee-icon">🔒</span> Pago 100% seguro y encriptado</div>
-      </div>
-      <!-- Tabs -->
-      <div class="tab-list" style="margin-top:2rem;" role="tablist">
-        <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('desc',this)">Descripción</button>
-        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('spec',this)">Especificaciones</button>
-        <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('rev',this)">Reseñas</button>
-      </div>
-      <div class="tab-panel active" id="descPanel" role="tabpanel">
-        <p id="pdpDesc" style="color:var(--gray-700);line-height:1.8;"></p>
-      </div>
-      <div class="tab-panel" id="specPanel" role="tabpanel">
-        <table style="width:100%;font-size:.875rem;border-collapse:collapse;">
-          <tr style="background:var(--gray-100);"><td style="padding:8px 12px;font-weight:700;">Material</td><td style="padding:8px 12px;">88% Poliéster, 12% Elastano</td></tr>
-          <tr><td style="padding:8px 12px;font-weight:700;">Tecnología</td><td style="padding:8px 12px;">Dry-Fit – secado rápido</td></tr>
-          <tr style="background:var(--gray-100);"><td style="padding:8px 12px;font-weight:700;">UV</td><td style="padding:8px 12px;">UPF 30+</td></tr>
-          <tr><td style="padding:8px 12px;font-weight:700;">Cuidado</td><td style="padding:8px 12px;">Máquina 30°C, no usar secadora</td></tr>
-          <tr style="background:var(--gray-100);"><td style="padding:8px 12px;font-weight:700;">Garantía</td><td style="padding:8px 12px;">6 meses contra defectos</td></tr>
-        </table>
-      </div>
-      <div class="tab-panel" id="revPanel" role="tabpanel">
-        <div style="display:flex;flex-direction:column;gap:1rem;">
-          <div style="background:var(--gray-100);border-radius:var(--r-md);padding:1rem;">
-            <div style="display:flex;justify-content:space-between;"><strong>Santiago G.</strong><span class="stars">★★★★★</span></div>
-            <p style="font-size:.875rem;color:var(--gray-700);margin-top:.5rem;">Excelente calidad, muy cómoda para entrenar.</p>
-            <span style="font-size:.75rem;color:var(--gray-500);">hace 2 semanas · Compra verificada ✅</span>
+  <div id="navbar-slot"></div>
+
+  <main class="page-content">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        <a href="catalogue.html">Catálogo</a>
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        <span class="breadcrumb-current" id="pdpBreadcrumb">Producto</span>
+      </nav>
+
+      <div class="pdp-layout" itemscope itemtype="https://schema.org/Product">
+        <!-- Gallery -->
+        <div>
+          <div class="pdp-gallery-main" id="mainImg" role="img" aria-label="Imagen del producto">👕</div>
+          <div class="pdp-gallery-thumbs" id="thumbs" role="list" aria-label="Imágenes del producto">
+            <div class="pdp-thumb active" role="listitem" onclick="selectThumb(this,'👕')">👕</div>
+            <div class="pdp-thumb" role="listitem" onclick="selectThumb(this,'📦')">📦</div>
+            <div class="pdp-thumb" role="listitem" onclick="selectThumb(this,'🏷')">🏷</div>
+            <div class="pdp-thumb" role="listitem" onclick="selectThumb(this,'✨')">✨</div>
           </div>
-          <div style="background:var(--gray-100);border-radius:var(--r-md);padding:1rem;">
-            <div style="display:flex;justify-content:space-between;"><strong>Laura M.</strong><span class="stars">★★★★☆</span></div>
-            <p style="font-size:.875rem;color:var(--gray-700);margin-top:.5rem;">Muy buen producto, lo recomiendo.</p>
-            <span style="font-size:.75rem;color:var(--gray-500);">hace 1 mes · Compra verificada ✅</span>
+        </div>
+
+        <!-- Info -->
+        <div>
+          <p class="pdp-brand" id="pdpBrand">ELEV8</p>
+          <h1 class="pdp-name" id="pdpName" itemprop="name">Cargando...</h1>
+          <div class="pdp-rating" id="pdpRating"></div>
+          <div class="pdp-price-row">
+            <span class="pdp-price-main price" id="pdpPrice" itemprop="price"></span>
+            <span class="price-old" id="pdpOldPrice" style="display:none"></span>
+            <span class="badge badge-green" id="pdpDiscount" style="display:none"></span>
+          </div>
+
+          <!-- Size -->
+          <p class="pdp-label">Talla <a href="#" style="font-size:.75rem;color:var(--red);margin-left:.5rem;" onclick="return false">Guía de tallas</a></p>
+          <div class="size-selector" id="sizeSelector"></div>
+
+          <!-- Color -->
+          <p class="pdp-label" style="margin-top:1rem;">Color: <span id="colorLabel" style="font-weight:400;color:var(--gray-600);">Negro</span></p>
+          <div class="color-selector" id="colorSelector"></div>
+
+          <!-- Qty -->
+          <p class="pdp-label" style="margin-top:1rem;">Cantidad</p>
+          <div class="qty-stepper" role="group" aria-label="Cantidad">
+            <button class="qty-btn" onclick="changeQty(-1)" aria-label="Reducir cantidad">−</button>
+            <span class="qty-num" id="qtyNum">1</span>
+            <button class="qty-btn" onclick="changeQty(1)" aria-label="Aumentar cantidad">+</button>
+          </div>
+          <p style="font-size:.8rem;color:var(--gray-500);margin-top:.5rem;" id="stockLabel"></p>
+
+          <!-- CTAs -->
+          <div class="pdp-ctas" style="margin-top:1.5rem;">
+            <button class="btn btn-primary btn-lg" id="addCartBtn" onclick="addToCartPDP()">🛒 Agregar al carrito</button>
+            <button class="btn btn-outline" id="wishBtn" onclick="toggleWishPDP()" aria-label="Favorito" style="padding:12px 16px;font-size:1.2rem;">🤍</button>
+          </div>
+          <a href="cart.html" class="btn btn-outline btn-full" style="margin-top:.75rem;">⚡ Comprar ahora</a>
+
+          <!-- Guarantees -->
+          <div class="pdp-guarantee" style="margin-top:1.5rem;">
+            <div class="guarantee-item"><span class="guarantee-icon">🚚</span> Envío gratis en compras mayores a $150.000</div>
+            <div class="guarantee-item"><span class="guarantee-icon">↩️</span> 30 días para devoluciones sin preguntas</div>
+            <div class="guarantee-item"><span class="guarantee-icon">🔒</span> Pago 100% seguro y encriptado</div>
+          </div>
+
+          <!-- Tabs -->
+          <div class="tab-list" style="margin-top:2rem;" role="tablist">
+            <button class="tab-btn active" role="tab" aria-selected="true" onclick="switchTab('desc',this)">Descripción</button>
+            <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('spec',this)">Especificaciones</button>
+            <button class="tab-btn" role="tab" aria-selected="false" onclick="switchTab('rev',this)">Reseñas</button>
+          </div>
+
+          <div class="tab-panel active" id="descPanel" role="tabpanel">
+            <p id="pdpDesc" style="color:var(--gray-700);line-height:1.8;"></p>
+          </div>
+
+          <div class="tab-panel" id="specPanel" role="tabpanel">
+            <table style="width:100%;font-size:.875rem;border-collapse:collapse;">
+              <tr style="background:var(--gray-100);"><td style="padding:8px 12px;font-weight:700;">Material</td><td style="padding:8px 12px;">88% Poliéster, 12% Elastano</td></tr>
+              <tr><td style="padding:8px 12px;font-weight:700;">Tecnología</td><td style="padding:8px 12px;">Dry-Fit – secado rápido</td></tr>
+              <tr style="background:var(--gray-100);"><td style="padding:8px 12px;font-weight:700;">UV</td><td style="padding:8px 12px;">UPF 30+</td></tr>
+              <tr><td style="padding:8px 12px;font-weight:700;">Cuidado</td><td style="padding:8px 12px;">Máquina 30°C, no usar secadora</td></tr>
+              <tr style="background:var(--gray-100);"><td style="padding:8px 12px;font-weight:700;">Garantía</td><td style="padding:8px 12px;">6 meses contra defectos</td></tr>
+            </table>
+          </div>
+
+          <div class="tab-panel" id="revPanel" role="tabpanel">
+            <div style="display:flex;flex-direction:column;gap:1rem;">
+              <div style="background:var(--gray-100);border-radius:var(--r-md);padding:1rem;">
+                <div style="display:flex;justify-content:space-between;"><strong>Santiago G.</strong><span class="stars">★★★★★</span></div>
+                <p style="font-size:.875rem;color:var(--gray-700);margin-top:.5rem;">Excelente calidad, muy cómoda para entrenar.</p>
+                <span style="font-size:.75rem;color:var(--gray-500);">hace 2 semanas · Compra verificada ✅</span>
+              </div>
+              <div style="background:var(--gray-100);border-radius:var(--r-md);padding:1rem;">
+                <div style="display:flex;justify-content:space-between;"><strong>Laura M.</strong><span class="stars">★★★★☆</span></div>
+                <p style="font-size:.875rem;color:var(--gray-700);margin-top:.5rem;">Muy buen producto, lo recomiendo.</p>
+                <span style="font-size:.75rem;color:var(--gray-500);">hace 1 mes · Compra verificada ✅</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+
+      <!-- Related -->
+      <section style="margin-top:4rem;" aria-labelledby="related-title">
+        <div class="section-header">
+          <h2 class="section-title" id="related-title">También te puede gustar</h2>
+        </div>
+        <div class="grid-4" id="relatedGrid"></div>
+      </section>
     </div>
-  </div>
-  <!-- Related -->
-  <section style="margin-top:4rem;" aria-labelledby="related-title">
-    <div class="section-header"><h2 class="section-title" id="related-title">También te puede gustar</h2></div>
-    <div class="grid-4" id="relatedGrid"></div>
-  </section>
-</div>
-</main>
-<div id="footer-slot"></div>
-<script src="../js/utils.js"></script>
-<script src="../js/store.js"></script>
-<script src="../js/data.js"></script>
-<script src="../js/components.js"></script>
-<script>
-let _prod=null, _qty=1, _size='M', _color='#0F0F14';
-function changeQty(d){_qty=Math.max(1,_qty+d);document.getElementById('qtyNum').textContent=_qty;}
-function selectThumb(el,emoji){document.querySelectorAll('.pdp-thumb').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('mainImg').textContent=emoji;}
-function switchTab(id,btn){document.querySelectorAll('.tab-btn').forEach(b=>{b.classList.remove('active');b.setAttribute('aria-selected','false');});btn.classList.add('active');btn.setAttribute('aria-selected','true');document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));document.getElementById(id+'Panel').classList.add('active');}
-function addToCartPDP(){if(!_prod)return;Store.addToCart({id:_prod.id,name:_prod.name,price:_prod.price,emoji:_prod.emoji,size:_size,color:_color,qty:_qty});UI.updateBadges();const b=document.getElementById('addCartBtn');b.textContent='✅ Agregado';setTimeout(()=>{b.innerHTML='🛒 Agregar al carrito';},1500);}
-function toggleWishPDP(){if(!_prod)return;const added=Store.toggleWishlist(_prod);document.getElementById('wishBtn').textContent=added?'❤️':'🤍';UI.updateBadges();}
-document.addEventListener('DOMContentLoaded', ()=>{
-  const id=parseInt(Params.get('id'))||1;
-  const p=Products.getById(id)||PRODUCTS[0]; _prod=p;
-  document.title=`${p.name} – Elev8 Sportswear`;
-  document.getElementById('pdpBreadcrumb').textContent=p.name;
-  document.getElementById('pdpName').textContent=p.name;
-  document.getElementById('mainImg').textContent=p.emoji;
-  document.getElementById('pdpPrice').textContent=Fmt.price(p.price);
-  document.getElementById('pdpDesc').textContent=p.desc;
-  document.getElementById('stockLabel').textContent=`${Math.floor(Math.random()*50+10)} disponibles`;
-  document.getElementById('pdpRating').innerHTML=`${renderStars(p.rating)}<span style="font-weight:700;color:var(--navy);margin-left:.5rem;">${p.rating}</span><span style="color:var(--gray-500);font-size:.8rem;">(${p.reviews} reseñas)</span>${p.badge?`<span class="badge badge-red" style="margin-left:.5rem;">${p.badge}</span>`:''}`;
-  if(p.oldPrice){const op=document.getElementById('pdpOldPrice');op.textContent=Fmt.price(p.oldPrice);op.style.display='';const disc=document.getElementById('pdpDiscount');disc.textContent=`-${Math.round((1-p.price/p.oldPrice)*100)}%`;disc.style.display='';}
-  const ss=document.getElementById('sizeSelector');
-  ss.innerHTML=p.sizes.map((s,i)=>`<button class="size-btn${i===0?' active':''}" onclick="selectSize(this,'${s}')">${s}</button>`).join('');
-  _size=p.sizes[0];
-  const cs=document.getElementById('colorSelector');
-  cs.innerHTML=p.colors.map((c,i)=>`<div class="color-dot${i===0?' active':''}" style="background:${c};${c==='#FFFFFF'?'border:1.5px solid #ddd':''}" onclick="selectColor(this,'${c}')" aria-label="Color ${c}" title="${c}"></div>`).join('');
-  if(Store.isWishlisted(p.id)) document.getElementById('wishBtn').textContent='❤️';
-  const rg=document.getElementById('relatedGrid');
-  if(rg) rg.innerHTML=Products.getRelated(p.id,4).map(x=>buildProductCard(x,'../')).join('');
-});
-function selectSize(btn,s){_size=s;document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
-function selectColor(dot,c){_color=c;document.querySelectorAll('.color-dot').forEach(d=>d.classList.remove('active'));dot.classList.add('active');}
-</script>
-</body></html>
+  </main>
+
+  <div id="footer-slot"></div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let _prod = null,
+      _qty = 1,
+      _size = 'M',
+      _color = '#0F0F14';
+
+    function changeQty(d) {
+      _qty = Math.max(1, _qty + d);
+      document.getElementById('qtyNum').textContent = _qty;
+    }
+
+    function selectThumb(el, emoji) {
+      document.querySelectorAll('.pdp-thumb').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('mainImg').textContent = emoji;
+    }
+
+    function switchTab(id, btn) {
+      document.querySelectorAll('.tab-btn').forEach(b => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      document.getElementById(id + 'Panel').classList.add('active');
+    }
+
+    function addToCartPDP() {
+      if (!_prod) return;
+      Store.addToCart({
+        id: _prod.id,
+        name: _prod.name,
+        price: _prod.price,
+        emoji: _prod.emoji,
+        size: _size,
+        color: _color,
+        qty: _qty
+      });
+      UI.updateBadges();
+      const b = document.getElementById('addCartBtn');
+      b.textContent = '✅ Agregado';
+      setTimeout(() => { b.innerHTML = '🛒 Agregar al carrito'; }, 1500);
+    }
+
+    function toggleWishPDP() {
+      if (!_prod) return;
+      const added = Store.toggleWishlist(_prod);
+      document.getElementById('wishBtn').textContent = added ? '❤️' : '🤍';
+      UI.updateBadges();
+    }
+
+    function selectSize(btn, s) {
+      _size = s;
+      document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    }
+
+    function selectColor(dot, c) {
+      _color = c;
+      document.querySelectorAll('.color-dot').forEach(d => d.classList.remove('active'));
+      dot.classList.add('active');
+      const label = document.getElementById('colorLabel');
+      if (label) label.textContent = c === '#0F0F14' ? 'Negro' : c === '#1A237E' ? 'Azul marino' : c === '#B71C1C' ? 'Rojo' : 'Color';
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const id = parseInt(new URLSearchParams(window.location.search).get('id')) || 1;
+      const p = Products.getById(id) || PRODUCTS[0];
+      _prod = p;
+
+      document.title = `${p.name} – Elev8 Sportswear`;
+      document.getElementById('pdpBreadcrumb').textContent = p.name;
+      document.getElementById('pdpName').textContent = p.name;
+      document.getElementById('mainImg').textContent = p.emoji;
+      document.getElementById('pdpPrice').textContent = Fmt.price(p.price);
+      document.getElementById('pdpDesc').textContent = p.desc;
+      document.getElementById('stockLabel').textContent = `${Math.floor(Math.random() * 50 + 10)} disponibles`;
+
+      document.getElementById('pdpRating').innerHTML = `
+        ${renderStars(p.rating)}
+        <span style="font-weight:700;color:var(--navy);margin-left:.5rem;">${p.rating}</span>
+        <span style="color:var(--gray-500);font-size:.8rem;">(${p.reviews} reseñas)</span>
+        ${p.badge ? `<span class="badge badge-red" style="margin-left:.5rem;">${p.badge}</span>` : ''}
+      `;
+
+      if (p.oldPrice) {
+        const op = document.getElementById('pdpOldPrice');
+        op.textContent = Fmt.price(p.oldPrice);
+        op.style.display = '';
+        const disc = document.getElementById('pdpDiscount');
+        disc.textContent = `-${Math.round((1 - p.price / p.oldPrice) * 100)}%`;
+        disc.style.display = '';
+      }
+
+      // Sizes
+      const ss = document.getElementById('sizeSelector');
+      ss.innerHTML = p.sizes.map((s, i) =>
+        `<button class="size-btn${i === 0 ? ' active' : ''}" onclick="selectSize(this,'${s}')">${s}</button>`
+      ).join('');
+      _size = p.sizes[0];
+
+      // Colors
+      const cs = document.getElementById('colorSelector');
+      cs.innerHTML = p.colors.map((c, i) =>
+        `<div class="color-dot${i === 0 ? ' active' : ''}" style="background:${c};${c === '#FFFFFF' ? 'border:1.5px solid #ddd' : ''}" onclick="selectColor(this,'${c}')" aria-label="Color ${c}" title="${c}"></div>`
+      ).join('');
+      _color = p.colors[0];
+
+      if (Store.isWishlisted(p.id)) {
+        document.getElementById('wishBtn').textContent = '❤️';
+      }
+
+      // Related products
+      const rg = document.getElementById('relatedGrid');
+      if (rg) {
+        rg.innerHTML = Products.getRelated(p.id, 4).map(x => buildProductCard(x, '../')).join('');
+      }
+    });
+  </script>
+</body>
+</html>

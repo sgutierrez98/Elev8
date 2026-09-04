@@ -1,15 +1,30 @@
-# Maven
-target/
+# Compiled files
 *.class
+target/
+*.war
 
-# IDE
+# IDE files
 .idea/
 *.iml
 .vscode/
 .settings/
-.classpath
 .project
+.classpath
+.metadata/
 
-# Sistema operativo
+# OS files
 .DS_Store
 Thumbs.db
+*.log
+
+# Database files
+*.db
+*.sqlite
+*.sqlite3
+
+# Environment files
+.env
+*.properties
+*.conf
+
+node_modules/

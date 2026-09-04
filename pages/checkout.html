@@ -1,111 +1,204 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Checkout – Elev8 Sportswear</title>
-  <link rel="stylesheet" href="../css/tokens.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div id="navbar-slot"></div>
-<main class="page-content">
-<div class="container">
-  <nav class="breadcrumb" aria-label="Ruta"><a href="../index.html">Inicio</a><span class="breadcrumb-sep">›</span><a href="cart.html">Carrito</a><span class="breadcrumb-sep">›</span><span class="breadcrumb-current">Checkout</span></nav>
-  <h1 style="font-size:var(--text-3xl);font-weight:900;color:var(--navy);margin-bottom:var(--sp-6);">Finalizar compra</h1>
-  <div class="checkout-layout">
-    <!-- LEFT: Forms -->
-    <div>
-      <!-- 1. Address -->
-      <div class="checkout-section">
-        <h2 class="checkout-section-title"><span class="checkout-section-num">1</span> Dirección de envío</h2>
-        <form id="addressForm" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-          <div class="form-group"><label class="form-label" for="chkNom">Nombre</label><input class="form-input" id="chkNom" type="text" placeholder="Santiago" required></div>
-          <div class="form-group"><label class="form-label" for="chkApe">Apellido</label><input class="form-input" id="chkApe" type="text" placeholder="García" required></div>
-          <div class="form-group" style="grid-column:1/-1;"><label class="form-label" for="chkDir">Dirección</label><input class="form-input" id="chkDir" type="text" placeholder="Calle 123 # 45-67" required></div>
-          <div class="form-group"><label class="form-label" for="chkCiu">Ciudad</label><input class="form-input" id="chkCiu" type="text" placeholder="Bogotá" required></div>
-          <div class="form-group"><label class="form-label" for="chkDep">Departamento</label><input class="form-input" id="chkDep" type="text" placeholder="Cundinamarca" required></div>
-          <div class="form-group"><label class="form-label" for="chkTel">Teléfono</label><input class="form-input" id="chkTel" type="tel" placeholder="310 123 4567" required></div>
-          <div class="form-group"><label class="form-label" for="chkEmail">Correo</label><input class="form-input" id="chkEmail" type="email" placeholder="tu@email.com" required></div>
-        </form>
-      </div>
-      <!-- 2. Payment -->
-      <div class="checkout-section">
-        <h2 class="checkout-section-title"><span class="checkout-section-num">2</span> Método de pago</h2>
-        <div class="payment-methods-grid" id="paymentMethods">
-          <div class="payment-method active" onclick="selectPay(this,'tarjeta')"><div class="payment-method-icon">💳</div><div class="payment-method-name">Tarjeta de crédito/débito</div></div>
-          <div class="payment-method" onclick="selectPay(this,'pse')"><div class="payment-method-icon">🏦</div><div class="payment-method-name">PSE</div></div>
-          <div class="payment-method" onclick="selectPay(this,'nequi')"><div class="payment-method-icon">📱</div><div class="payment-method-name">Nequi</div></div>
-          <div class="payment-method" onclick="selectPay(this,'efecty')"><div class="payment-method-icon">💸</div><div class="payment-method-name">Efecty</div></div>
-          <div class="payment-method" onclick="selectPay(this,'daviplata')"><div class="payment-method-icon">🟡</div><div class="payment-method-name">Daviplata</div></div>
-          <div class="payment-method" onclick="selectPay(this,'wompi')"><div class="payment-method-icon">⚡</div><div class="payment-method-name">Wompi</div></div>
-        </div>
-        <div id="cardForm" style="margin-top:1.5rem;">
-          <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
-            <div class="form-group" style="grid-column:1/-1;"><label class="form-label" for="ccNum">Número de tarjeta</label><input class="form-input" id="ccNum" type="text" placeholder="1234 5678 9012 3456" maxlength="19"></div>
-            <div class="form-group"><label class="form-label" for="ccExp">Vencimiento</label><input class="form-input" id="ccExp" type="text" placeholder="MM/AA" maxlength="5"></div>
-            <div class="form-group"><label class="form-label" for="ccCvv">CVV</label><input class="form-input" id="ccCvv" type="text" placeholder="123" maxlength="3"></div>
+  <div id="navbar-slot"></div>
+
+  <main class="page-content">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        <a href="cart.html">Carrito</a>
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        <span class="breadcrumb-current">Checkout</span>
+      </nav>
+
+      <h1 style="font-size:var(--text-3xl);font-weight:900;color:var(--navy);margin-bottom:var(--sp-6);">Finalizar compra</h1>
+
+      <div class="checkout-layout">
+        <!-- LEFT: Forms -->
+        <div>
+          <!-- 1. Address -->
+          <div class="checkout-section">
+            <h2 class="checkout-section-title"><span class="checkout-section-num">1</span> Dirección de envío</h2>
+            <form id="addressForm" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+              <div class="form-group">
+                <label class="form-label" for="chkNom">Nombre</label>
+                <input class="form-input" id="chkNom" type="text" placeholder="Santiago" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="chkApe">Apellido</label>
+                <input class="form-input" id="chkApe" type="text" placeholder="García" required>
+              </div>
+              <div class="form-group" style="grid-column:1/-1;">
+                <label class="form-label" for="chkDir">Dirección</label>
+                <input class="form-input" id="chkDir" type="text" placeholder="Calle 123 # 45-67" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="chkCiu">Ciudad</label>
+                <input class="form-input" id="chkCiu" type="text" placeholder="Bogotá" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="chkDep">Departamento</label>
+                <input class="form-input" id="chkDep" type="text" placeholder="Cundinamarca" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="chkTel">Teléfono</label>
+                <input class="form-input" id="chkTel" type="tel" placeholder="310 123 4567" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="chkEmail">Correo</label>
+                <input class="form-input" id="chkEmail" type="email" placeholder="tu@email.com" required>
+              </div>
+            </form>
+          </div>
+
+          <!-- 2. Payment -->
+          <div class="checkout-section">
+            <h2 class="checkout-section-title"><span class="checkout-section-num">2</span> Método de pago</h2>
+            <div class="payment-methods-grid" id="paymentMethods">
+              <div class="payment-method active" onclick="selectPay(this,'tarjeta')">
+                <div class="payment-method-icon">💳</div>
+                <div class="payment-method-name">Tarjeta de crédito/débito</div>
+              </div>
+              <div class="payment-method" onclick="selectPay(this,'pse')">
+                <div class="payment-method-icon">🏦</div>
+                <div class="payment-method-name">PSE</div>
+              </div>
+              <div class="payment-method" onclick="selectPay(this,'nequi')">
+                <div class="payment-method-icon">📱</div>
+                <div class="payment-method-name">Nequi</div>
+              </div>
+              <div class="payment-method" onclick="selectPay(this,'efecty')">
+                <div class="payment-method-icon">💸</div>
+                <div class="payment-method-name">Efecty</div>
+              </div>
+              <div class="payment-method" onclick="selectPay(this,'daviplata')">
+                <div class="payment-method-icon">🟡</div>
+                <div class="payment-method-name">Daviplata</div>
+              </div>
+              <div class="payment-method" onclick="selectPay(this,'wompi')">
+                <div class="payment-method-icon">⚡</div>
+                <div class="payment-method-name">Wompi</div>
+              </div>
+            </div>
+
+            <div id="cardForm" style="margin-top:1.5rem;">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;">
+                <div class="form-group" style="grid-column:1/-1;">
+                  <label class="form-label" for="ccNum">Número de tarjeta</label>
+                  <input class="form-input" id="ccNum" type="text" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ccExp">Vencimiento</label>
+                  <input class="form-input" id="ccExp" type="text" placeholder="MM/AA" maxlength="5">
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="ccCvv">CVV</label>
+                  <input class="form-input" id="ccCvv" type="text" placeholder="123" maxlength="3">
+                </div>
+              </div>
+            </div>
           </div>
         </div>
+
+        <!-- RIGHT: Summary -->
+        <aside class="order-summary" aria-label="Resumen del pedido">
+          <h2 class="summary-title">Tu pedido</h2>
+          <div id="checkoutItems" style="margin-bottom:1rem;"></div>
+          <div class="summary-row"><span>Subtotal</span><span id="chkSubtotal">$0</span></div>
+          <div class="summary-row"><span>Envío</span><span id="chkShipping" style="color:var(--success);font-weight:700;">$0</span></div>
+          <div class="summary-row summary-row-total"><span>Total</span><span id="chkTotal" class="price">$0</span></div>
+          <button class="btn btn-primary btn-full" style="margin-top:1.5rem;font-size:var(--text-base);" onclick="submitOrder()">Confirmar pedido</button>
+          <p style="font-size:.75rem;color:var(--success);text-align:center;margin-top:.75rem;">🔒 Transacción cifrada y segura</p>
+        </aside>
       </div>
     </div>
-    <!-- RIGHT: Summary -->
-    <aside class="order-summary" aria-label="Resumen del pedido">
-      <h2 class="summary-title">Tu pedido</h2>
-      <div id="checkoutItems" style="margin-bottom:1rem;"></div>
-      <div class="summary-row"><span>Subtotal</span><span id="chkSubtotal">$0</span></div>
-      <div class="summary-row"><span>Envío</span><span id="chkShipping" style="color:var(--success);font-weight:700;">$0</span></div>
-      <div class="summary-row summary-row-total"><span>Total</span><span id="chkTotal" class="price">$0</span></div>
-      <button class="btn btn-primary btn-full" style="margin-top:1.5rem;font-size:var(--text-base);" onclick="submitOrder()">Confirmar pedido</button>
-      <p style="font-size:.75rem;color:var(--success);text-align:center;margin-top:.75rem;">🔒 Transacción cifrada y segura</p>
-    </aside>
-  </div>
-</div>
-</main>
-<!-- Success Modal -->
-<div class="overlay" id="successOverlay"></div>
-<dialog id="successModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);background:#fff;border-radius:20px;padding:2.5rem;width:min(480px,90vw);z-index:900;opacity:0;pointer-events:none;transition:all .25s;border:none;box-shadow:0 16px 48px rgba(0,0,0,.2);" role="dialog" aria-modal="true" aria-labelledby="successTitle">
-  <div style="text-align:center;">
-    <div style="font-size:4rem;margin-bottom:1rem;">🎉</div>
-    <h2 id="successTitle" style="font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:.75rem;">¡Pedido confirmado!</h2>
-    <p style="color:var(--gray-600);margin-bottom:.5rem;">Tu pedido <strong id="orderNum">#ELV-2025-001</strong> ha sido recibido.</p>
-    <p style="color:var(--gray-500);font-size:.875rem;margin-bottom:2rem;">Recibirás un correo de confirmación en breve.</p>
-    <a href="../index.html" class="btn btn-primary btn-full btn-lg">Seguir comprando</a>
-  </div>
-</dialog>
-<div id="footer-slot"></div>
-<script src="../js/utils.js"></script>
-<script src="../js/store.js"></script>
-<script src="../js/data.js"></script>
-<script src="../js/components.js"></script>
-<script>
-let _payMethod='tarjeta';
-function selectPay(el,m){_payMethod=m;document.querySelectorAll('.payment-method').forEach(e=>e.classList.remove('active'));el.classList.add('active');document.getElementById('cardForm').style.display=m==='tarjeta'?'block':'none';}
-function submitOrder(){
-  const form=document.getElementById('addressForm');
-  if(!form.checkValidity()){form.reportValidity();return;}
-  const num='ELV-'+Date.now().toString().slice(-6);
-  document.getElementById('orderNum').textContent='#'+num;
-  const ov=document.getElementById('successOverlay');
-  const md=document.getElementById('successModal');
-  ov.classList.add('active');
-  md.style.opacity='1';md.style.pointerEvents='all';md.style.transform='translate(-50%,-50%) scale(1)';
-  Store.clearCart();
-}
-document.addEventListener('DOMContentLoaded',()=>{
-  const items=Store.getCart();
-  const ci=document.getElementById('checkoutItems');
-  if(!items.length){ci.innerHTML='<p style="color:var(--gray-500);font-size:.875rem;">No hay productos en el carrito.</p>';return;}
-  ci.innerHTML=items.map(it=>`<div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--gray-200);"><span style="font-size:1.6rem;">${it.emoji}</span><div style="flex:1;"><div style="font-size:.875rem;font-weight:700;">${it.name}</div><div style="font-size:.75rem;color:var(--gray-500);">${it.size} · Cant: ${it.qty}</div></div><span style="font-weight:700;color:var(--navy);">${Fmt.price(it.price*it.qty)}</span></div>`).join('');
-  const sub=Store.cartTotal();
-  const ship=sub>=150000?0:8000;
-  document.getElementById('chkSubtotal').textContent=Fmt.price(sub);
-  document.getElementById('chkShipping').textContent=ship?Fmt.price(ship):'GRATIS';
-  document.getElementById('chkTotal').textContent=Fmt.price(sub+ship);
-  // Format card number
-  document.getElementById('ccNum')?.addEventListener('input',e=>{let v=e.target.value.replace(/\D/g,'').slice(0,16);e.target.value=v.replace(/(.{4})/g,'$1 ').trim();});
-  document.getElementById('ccExp')?.addEventListener('input',e=>{let v=e.target.value.replace(/\D/g,'').slice(0,4);if(v.length>2)v=v.slice(0,2)+'/'+v.slice(2);e.target.value=v;});
-});
-</script>
-</body></html>
+  </main>
+
+  <!-- Success Modal -->
+  <div class="overlay" id="successOverlay"></div>
+  <dialog id="successModal" style="position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.95);background:#fff;border-radius:20px;padding:2.5rem;width:min(480px,90vw);z-index:900;opacity:0;pointer-events:none;transition:all .25s;border:none;box-shadow:0 16px 48px rgba(0,0,0,.2);" role="dialog" aria-modal="true" aria-labelledby="successTitle">
+    <div style="text-align:center;">
+      <div style="font-size:4rem;margin-bottom:1rem;">🎉</div>
+      <h2 id="successTitle" style="font-size:1.5rem;font-weight:800;color:var(--navy);margin-bottom:.75rem;">¡Pedido confirmado!</h2>
+      <p style="color:var(--gray-600);margin-bottom:.5rem;">Tu pedido <strong id="orderNum">#ELV-2025-001</strong> ha sido recibido.</p>
+      <p style="color:var(--gray-500);font-size:.875rem;margin-bottom:2rem;">Recibirás un correo de confirmación en breve.</p>
+      <a href="../index.html" class="btn btn-primary btn-full btn-lg">Seguir comprando</a>
+    </div>
+  </dialog>
+
+  <div id="footer-slot"></div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let _payMethod = 'tarjeta';
+
+    function selectPay(el, m) {
+      _payMethod = m;
+      document.querySelectorAll('.payment-method').forEach(e => e.classList.remove('active'));
+      el.classList.add('active');
+      document.getElementById('cardForm').style.display = m === 'tarjeta' ? 'block' : 'none';
+    }
+
+    function submitOrder() {
+      const form = document.getElementById('addressForm');
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      const num = 'ELV-' + Date.now().toString().slice(-6);
+      document.getElementById('orderNum').textContent = '#' + num;
+      const ov = document.getElementById('successOverlay');
+      const md = document.getElementById('successModal');
+      ov.classList.add('active');
+      md.style.opacity = '1';
+      md.style.pointerEvents = 'all';
+      md.style.transform = 'translate(-50%,-50%) scale(1)';
+      Store.clearCart();
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const items = Store.getCart();
+      const ci = document.getElementById('checkoutItems');
+
+      if (!items.length) {
+        ci.innerHTML = '<p style="color:var(--gray-500);font-size:.875rem;">No hay productos en el carrito.</p>';
+        return;
+      }
+
+      ci.innerHTML = items.map(it => `
+        <div style="display:flex;align-items:center;gap:.75rem;padding:.75rem 0;border-bottom:1px solid var(--gray-200);">
+          <span style="font-size:1.6rem;">${it.emoji}</span>
+          <div style="flex:1;">
+            <div style="font-size:.875rem;font-weight:700;">${it.name}</div>
+            <div style="font-size:.75rem;color:var(--gray-500);">${it.size} · Cant: ${it.qty}</div>
+          </div>
+          <span style="font-weight:700;color:var(--navy);">${Fmt.price(it.price * it.qty)}</span>
+        </div>
+      `).join('');
+
+      const sub = Store.cartTotal();
+      const ship = sub >= 150000 ? 0 : 8000;
+      document.getElementById('chkSubtotal').textContent = Fmt.price(sub);
+      document.getElementById('chkShipping').textContent = ship ? Fmt.price(ship) : 'GRATIS';
+      document.getElementById('chkTotal').textContent = Fmt.price(sub + ship);
+
+      // Formatear número de tarjeta
+      document.getElementById('ccNum')?.addEventListener('input', e => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 16);
+        e.target.value = v.replace(/(.{4})/g, '$1 ').trim();
+      });
+
+      document.getElementById('ccExp')?.addEventListener('input', e => {
+        let v = e.target.value.replace(/\D/g, '').slice(0, 4);
+        if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2);
+        e.target.value = v;
+      });
+    });
+  </script>
+</body>
+</html>
