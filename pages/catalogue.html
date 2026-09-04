@@ -1,135 +1,199 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Catálogo – Elev8 Sportswear</title>
-  <link rel="stylesheet" href="../css/tokens.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div id="navbar-slot"></div>
-<main class="page-content">
-<div class="container">
-  <nav class="breadcrumb" aria-label="Ruta de navegación">
-    <a href="../index.html">Inicio</a>
-    <span class="breadcrumb-sep" aria-hidden="true">›</span>
-    <span class="breadcrumb-current" id="breadCurrent">Catálogo</span>
-  </nav>
-  <div class="catalogue-layout">
-    <aside class="filter-sidebar" aria-label="Filtros de productos">
-      <div class="filter-header">
-        <h2 class="filter-title">Filtros</h2>
-        <button class="filter-clear" onclick="clearFilters()">Limpiar todo</button>
-      </div>
-      <div class="filter-group">
-        <h3 class="filter-group-title">Categoría</h3>
-        <div id="catFilters">
-          <label class="filter-option"><input type="radio" name="cat" value="todos" checked onchange="applyFilters()"><span>Todos</span><span class="filter-count">12</span></label>
-          <label class="filter-option"><input type="radio" name="cat" value="camisetas" onchange="applyFilters()"><span>Camisetas</span><span class="filter-count">2</span></label>
-          <label class="filter-option"><input type="radio" name="cat" value="pantalonetas" onchange="applyFilters()"><span>Pantalonetas</span><span class="filter-count">2</span></label>
-          <label class="filter-option"><input type="radio" name="cat" value="licras" onchange="applyFilters()"><span>Licras</span><span class="filter-count">2</span></label>
-          <label class="filter-option"><input type="radio" name="cat" value="chaquetas" onchange="applyFilters()"><span>Chaquetas</span><span class="filter-count">2</span></label>
-          <label class="filter-option"><input type="radio" name="cat" value="accesorios" onchange="applyFilters()"><span>Accesorios</span><span class="filter-count">4</span></label>
-        </div>
-      </div>
-      <div class="filter-group">
-        <h3 class="filter-group-title">Precio máximo</h3>
-        <input type="range" class="range-slider" id="priceRange" min="0" max="300000" value="300000" step="5000" oninput="document.getElementById('priceLabel').textContent='$'+parseInt(this.value).toLocaleString('es-CO');applyFilters()">
-        <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--gray-500);margin-top:.25rem;"><span>$0</span><span id="priceLabel">$300.000</span></div>
-      </div>
-      <div class="filter-group">
-        <h3 class="filter-group-title">Talla</h3>
-        <div class="size-selector" id="sizeFilters">
-          <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">XS</button>
-          <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">S</button>
-          <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">M</button>
-          <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">L</button>
-          <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">XL</button>
-        </div>
-      </div>
-      <div class="filter-group">
-        <h3 class="filter-group-title">Valoración</h3>
-        <label class="filter-option"><input type="radio" name="rating" value="0" checked onchange="applyFilters()"><span>Todas</span></label>
-        <label class="filter-option"><input type="radio" name="rating" value="4" onchange="applyFilters()"><span>★★★★ y más</span></label>
-        <label class="filter-option"><input type="radio" name="rating" value="4.5" onchange="applyFilters()"><span>★★★★½ y más</span></label>
-      </div>
-    </aside>
-    <div class="catalogue-main">
-      <div class="catalogue-toolbar">
-        <p class="result-count" id="resultCount">Cargando...</p>
-        <div class="toolbar-right">
-          <label for="sortSelect" style="font-size:.8rem;color:var(--gray-500);">Ordenar:</label>
-          <select class="form-input form-select toolbar-sort" id="sortSelect" onchange="applyFilters()">
-            <option value="popular">Más populares</option>
-            <option value="rating">Mejor valorados</option>
-            <option value="price-asc">Precio: menor a mayor</option>
-            <option value="price-desc">Precio: mayor a menor</option>
-          </select>
-          <div class="view-toggle">
-            <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Cuadrícula" aria-label="Vista cuadrícula">⊞</button>
-            <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="Lista" aria-label="Vista lista">☰</button>
+  <div id="navbar-slot"></div>
+
+  <main class="page-content">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        <span class="breadcrumb-current" id="breadCurrent">Catálogo</span>
+      </nav>
+
+      <div class="catalogue-layout">
+        <!-- FILTROS -->
+        <aside class="filter-sidebar" aria-label="Filtros de productos">
+          <div class="filter-header">
+            <h2 class="filter-title">Filtros</h2>
+            <button class="filter-clear" onclick="clearFilters()">Limpiar todo</button>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-group-title">Categoría</h3>
+            <div id="catFilters">
+              <label class="filter-option">
+                <input type="radio" name="cat" value="todos" checked onchange="applyFilters()">
+                <span>Todos</span>
+                <span class="filter-count">12</span>
+              </label>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-group-title">Precio máximo</h3>
+            <input type="range" class="range-slider" id="priceRange" min="0" max="300000" value="300000" step="5000" oninput="document.getElementById('priceLabel').textContent='$'+parseInt(this.value).toLocaleString('es-CO');applyFilters()">
+            <div style="display:flex;justify-content:space-between;font-size:.75rem;color:var(--gray-500);margin-top:.25rem;">
+              <span>$0</span>
+              <span id="priceLabel">$300.000</span>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-group-title">Talla</h3>
+            <div class="size-selector" id="sizeFilters">
+              <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">XS</button>
+              <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">S</button>
+              <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">M</button>
+              <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">L</button>
+              <button class="size-btn active" onclick="this.classList.toggle('active');applyFilters()">XL</button>
+            </div>
+          </div>
+
+          <div class="filter-group">
+            <h3 class="filter-group-title">Valoración</h3>
+            <label class="filter-option"><input type="radio" name="rating" value="0" checked onchange="applyFilters()"><span>Todas</span></label>
+            <label class="filter-option"><input type="radio" name="rating" value="4" onchange="applyFilters()"><span>★★★★ y más</span></label>
+            <label class="filter-option"><input type="radio" name="rating" value="4.5" onchange="applyFilters()"><span>★★★★½ y más</span></label>
+          </div>
+        </aside>
+
+        <!-- PRODUCTOS -->
+        <div class="catalogue-main">
+          <div class="catalogue-toolbar">
+            <p class="result-count" id="resultCount">Cargando...</p>
+            <div class="toolbar-right">
+              <label for="sortSelect" style="font-size:.8rem;color:var(--gray-500);">Ordenar:</label>
+              <select class="form-input form-select toolbar-sort" id="sortSelect" onchange="applyFilters()">
+                <option value="popular">Más populares</option>
+                <option value="rating">Mejor valorados</option>
+                <option value="price-asc">Precio: menor a mayor</option>
+                <option value="price-desc">Precio: mayor a menor</option>
+              </select>
+              <div class="view-toggle">
+                <button class="view-btn active" id="gridViewBtn" onclick="setView('grid')" title="Cuadrícula" aria-label="Vista cuadrícula">⊞</button>
+                <button class="view-btn" id="listViewBtn" onclick="setView('list')" title="Lista" aria-label="Vista lista">☰</button>
+              </div>
+            </div>
+          </div>
+
+          <div id="productGrid" class="grid-4"></div>
+
+          <div id="emptyState" class="empty-state" style="display:none">
+            <div class="empty-icon">🔍</div>
+            <h3>Sin resultados</h3>
+            <p>Prueba con otros filtros o busca algo diferente.</p>
+            <button class="btn btn-primary" onclick="clearFilters()">Limpiar filtros</button>
           </div>
         </div>
       </div>
-      <div id="productGrid" class="grid-4"></div>
-      <div id="emptyState" class="empty-state" style="display:none">
-        <div class="empty-icon">🔍</div>
-        <h3>Sin resultados</h3>
-        <p>Prueba con otros filtros o busca algo diferente.</p>
-        <button class="btn btn-primary" onclick="clearFilters()">Limpiar filtros</button>
-      </div>
-      <nav class="pagination" id="pagination" aria-label="Paginación"></nav>
     </div>
-  </div>
-</div>
-</main>
-<div id="footer-slot"></div>
-<script src="../js/utils.js"></script>
-<script src="../js/store.js"></script>
-<script src="../js/data.js"></script>
-<script src="../js/components.js"></script>
-<script>
-let currentView = 'grid';
-function applyFilters() {
-  const cat   = document.querySelector('input[name="cat"]:checked')?.value || 'todos';
-  const maxP  = parseInt(document.getElementById('priceRange').value);
-  const sort  = document.getElementById('sortSelect').value;
-  const minR  = parseFloat(document.querySelector('input[name="rating"]:checked')?.value || '0');
-  const params= new URLSearchParams(window.location.search);
-  const badge = params.get('badge');
-  const q     = params.get('q');
-  let prods = Products.filter({ category: cat, maxPrice: maxP, sort, minRating: minR || undefined, badge: badge || undefined, search: q || undefined });
-  const grid = document.getElementById('productGrid');
-  const empty= document.getElementById('emptyState');
-  document.getElementById('resultCount').textContent = `${prods.length} producto${prods.length!==1?'s':''} encontrado${prods.length!==1?'s':''}`;
-  if (!prods.length) { grid.innerHTML=''; grid.style.display='none'; empty.style.display='block'; }
-  else { empty.style.display='none'; grid.style.display=''; grid.innerHTML = prods.map(p=>buildProductCard(p,'../')).join(''); }
-}
-function clearFilters() {
-  document.querySelectorAll('input[name="cat"]')[0].checked=true;
-  document.querySelectorAll('input[name="rating"]')[0].checked=true;
-  document.getElementById('priceRange').value=300000;
-  document.getElementById('priceLabel').textContent='$300.000';
-  applyFilters();
-}
-function setView(v) {
-  currentView=v;
-  document.getElementById('gridViewBtn').classList.toggle('active',v==='grid');
-  document.getElementById('listViewBtn').classList.toggle('active',v==='list');
-  const g=document.getElementById('productGrid');
-  g.className=v==='grid'?'grid-4':'';
-  if(v==='list') g.style.display='flex',g.style.flexDirection='column',g.style.gap='12px';
-  else g.style.cssText='';
-}
-document.addEventListener('DOMContentLoaded', () => {
-  const p=new URLSearchParams(window.location.search);
-  const cat=p.get('cat'), badge=p.get('badge'), q=p.get('q');
-  if(cat){const r=document.querySelector(`input[value="${cat}"]`);if(r)r.checked=true;document.getElementById('breadCurrent').textContent=CATEGORIES.find(c=>c.id===cat)?.name||cat;}
-  if(badge) document.getElementById('breadCurrent').textContent=badge;
-  if(q) document.getElementById('breadCurrent').textContent=`Buscar: "${q}"`;
-  applyFilters();
-});
-</script>
-</body></html>
+  </main>
+
+  <div id="footer-slot"></div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let currentView = 'grid';
+
+    // Cargar categorías en filtros
+    document.addEventListener('DOMContentLoaded', () => {
+      const container = document.getElementById('catFilters');
+      if (container) {
+        const todos = container.querySelector('input[value="todos"]').closest('.filter-option');
+        container.innerHTML = `
+          <label class="filter-option"><input type="radio" name="cat" value="todos" checked onchange="applyFilters()"><span>Todos</span><span class="filter-count">${PRODUCTS.length}</span></label>
+          ${CATEGORIES.map(c => `
+            <label class="filter-option"><input type="radio" name="cat" value="${c.id}" onchange="applyFilters()"><span>${c.name}</span><span class="filter-count">${Products.getByCategory(c.id).length}</span></label>
+          `).join('')}
+        `;
+      }
+
+      // Aplicar filtros desde URL
+      const params = new URLSearchParams(window.location.search);
+      const cat = params.get('cat');
+      const badge = params.get('badge');
+      const q = params.get('q');
+
+      if (cat) {
+        const radio = document.querySelector(`input[name="cat"][value="${cat}"]`);
+        if (radio) radio.checked = true;
+        document.getElementById('breadCurrent').textContent = CATEGORIES.find(c => c.id === cat)?.name || cat;
+      }
+      if (badge) {
+        document.getElementById('breadCurrent').textContent = badge === 'NUEVO' ? 'Novedades' : badge;
+      }
+      if (q) {
+        document.getElementById('breadCurrent').textContent = `Buscar: "${q}"`;
+        const searchInput = document.getElementById('navSearchInput');
+        if (searchInput) searchInput.value = q;
+      }
+
+      applyFilters();
+    });
+
+    function applyFilters() {
+      const cat = document.querySelector('input[name="cat"]:checked')?.value || 'todos';
+      const maxP = parseInt(document.getElementById('priceRange').value);
+      const sort = document.getElementById('sortSelect').value;
+      const minR = parseFloat(document.querySelector('input[name="rating"]:checked')?.value || '0');
+      const params = new URLSearchParams(window.location.search);
+      const badge = params.get('badge');
+      const q = params.get('q');
+
+      let prods = Products.filter({
+        category: cat,
+        maxPrice: maxP,
+        sort,
+        minRating: minR || undefined,
+        badge: badge || undefined,
+        search: q || undefined
+      });
+
+      const grid = document.getElementById('productGrid');
+      const empty = document.getElementById('emptyState');
+      document.getElementById('resultCount').textContent = `${prods.length} producto${prods.length !== 1 ? 's' : ''} encontrado${prods.length !== 1 ? 's' : ''}`;
+
+      if (!prods.length) {
+        grid.innerHTML = '';
+        grid.style.display = 'none';
+        empty.style.display = 'block';
+      } else {
+        empty.style.display = 'none';
+        grid.style.display = '';
+        grid.innerHTML = prods.map(p => buildProductCard(p, '../')).join('');
+        UI.updateBadges();
+      }
+    }
+
+    function clearFilters() {
+      document.querySelectorAll('input[name="cat"]')[0].checked = true;
+      document.querySelectorAll('input[name="rating"]')[0].checked = true;
+      document.getElementById('priceRange').value = 300000;
+      document.getElementById('priceLabel').textContent = '$300.000';
+      applyFilters();
+    }
+
+    function setView(v) {
+      currentView = v;
+      document.getElementById('gridViewBtn').classList.toggle('active', v === 'grid');
+      document.getElementById('listViewBtn').classList.toggle('active', v === 'list');
+      const g = document.getElementById('productGrid');
+      g.className = v === 'grid' ? 'grid-4' : '';
+      if (v === 'list') {
+        g.style.display = 'flex';
+        g.style.flexDirection = 'column';
+        g.style.gap = '12px';
+      } else {
+        g.style.cssText = '';
+      }
+    }
+  </script>
+</body>
+</html>

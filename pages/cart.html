@@ -1,109 +1,177 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Mi Carrito – Elev8 Sportswear</title>
-  <link rel="stylesheet" href="../css/tokens.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div id="navbar-slot"></div>
-<main class="page-content">
-<div class="container">
-  <nav class="breadcrumb" aria-label="Ruta de navegación"><a href="../index.html">Inicio</a><span class="breadcrumb-sep" aria-hidden="true">›</span><span class="breadcrumb-current">Mi Carrito</span></nav>
-  <h1 style="font-size:var(--text-3xl);font-weight:900;color:var(--navy);margin-bottom:var(--sp-6);">Mi Carrito <span id="cartCountTitle" style="font-size:var(--text-xl);color:var(--gray-500);font-weight:400;"></span></h1>
-  <div class="cart-page-layout">
-    <div>
-      <div class="cart-table-head"><span>Producto</span><span>Precio</span><span>Cantidad</span><span>Subtotal</span><span></span></div>
-      <div id="cartItemsContainer"></div>
-      <div style="display:flex;justify-content:space-between;margin-top:var(--sp-6);">
-        <a href="catalogue.html" class="btn btn-ghost">← Seguir comprando</a>
-        <button class="btn btn-outline" onclick="if(confirm('¿Vaciar el carrito?')){Store.clearCart();renderCart();}">🗑 Vaciar carrito</button>
+  <div id="navbar-slot"></div>
+
+  <main class="page-content">
+    <div class="container">
+      <nav class="breadcrumb" aria-label="Ruta de navegación">
+        <a href="../index.html">Inicio</a>
+        <span class="breadcrumb-sep" aria-hidden="true">›</span>
+        <span class="breadcrumb-current">Mi Carrito</span>
+      </nav>
+
+      <h1 style="font-size:var(--text-3xl);font-weight:900;color:var(--navy);margin-bottom:var(--sp-6);">
+        Mi Carrito <span id="cartCountTitle" style="font-size:var(--text-xl);color:var(--gray-500);font-weight:400;"></span>
+      </h1>
+
+      <div class="cart-page-layout">
+        <div>
+          <div class="cart-table-head">
+            <span>Producto</span>
+            <span>Precio</span>
+            <span>Cantidad</span>
+            <span>Subtotal</span>
+            <span></span>
+          </div>
+          <div id="cartItemsContainer"></div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:var(--sp-6);">
+            <a href="catalogue.html" class="btn btn-ghost">← Seguir comprando</a>
+            <button class="btn btn-outline" onclick="if(confirm('¿Vaciar el carrito?')){Store.clearCart();renderCart();}">🗑 Vaciar carrito</button>
+          </div>
+        </div>
+
+        <aside class="order-summary" aria-label="Resumen del pedido">
+          <h2 class="summary-title">Resumen del pedido</h2>
+
+          <form onsubmit="applyCoupon(event)">
+            <p style="font-size:var(--text-sm);font-weight:600;color:var(--navy);margin-bottom:.5rem;">¿Tienes cupón?</p>
+            <div class="coupon-form">
+              <input type="text" id="couponInput" class="form-input" placeholder="Ej: ELEV10" style="font-size:var(--text-sm);">
+              <button type="submit" class="btn btn-outline btn-sm">Aplicar</button>
+            </div>
+            <p id="couponMsg" style="min-height:1.2rem;font-size:var(--text-xs);margin-bottom:var(--sp-4);"></p>
+          </form>
+
+          <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">$0</span></div>
+          <div class="summary-row"><span>Envío</span><span id="summaryShipping" style="color:var(--success);font-weight:700;">$0</span></div>
+          <div class="summary-row"><span>Descuento</span><span id="summaryDiscount" style="color:var(--red);">$0</span></div>
+          <div class="summary-row summary-row-total"><span>Total</span><span id="summaryTotal" class="price">$0</span></div>
+
+          <a href="checkout.html" class="btn btn-primary btn-full" style="margin-top:1.5rem;font-size:var(--text-base);">Proceder al pago →</a>
+          <p style="font-size:.75rem;color:var(--success);text-align:center;margin-top:1rem;">🔒 Compra 100% segura y encriptada</p>
+
+          <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
+            <span class="pay-icon">💳 Visa</span>
+            <span class="pay-icon">💳 MC</span>
+            <span class="pay-icon">🏦 PSE</span>
+            <span class="pay-icon">📱 Nequi</span>
+          </div>
+        </aside>
       </div>
     </div>
-    <aside class="order-summary" aria-label="Resumen del pedido">
-      <h2 class="summary-title">Resumen del pedido</h2>
-      <form onsubmit="applyCoupon(event)">
-        <p style="font-size:var(--text-sm);font-weight:600;color:var(--navy);margin-bottom:.5rem;">¿Tienes cupón?</p>
-        <div class="coupon-form">
-          <input type="text" id="couponInput" class="form-input" placeholder="Ej: ELEV10" style="font-size:var(--text-sm);">
-          <button type="submit" class="btn btn-outline btn-sm">Aplicar</button>
+  </main>
+
+  <div id="footer-slot"></div>
+
+  <script src="../js/main.js"></script>
+  <script>
+    let _discount = 0;
+
+    function renderCart() {
+      const items = Store.getCart();
+      const container = document.getElementById('cartItemsContainer');
+      const countEl = document.getElementById('cartCountTitle');
+      const n = Store.cartCount();
+
+      if (countEl) countEl.textContent = n > 0 ? `(${n} artículo${n !== 1 ? 's' : ''})` : ' ';
+
+      if (!items.length) {
+        container.innerHTML = `
+          <div class="cart-empty">
+            <div class="empty-icon">🛒</div>
+            <h3 style="color:var(--navy);">Tu carrito está vacío</h3>
+            <p style="color:var(--gray-500);margin:1rem 0;">Agrega productos para empezar</p>
+            <a href="catalogue.html" class="btn btn-primary">Ver catálogo</a>
+          </div>
+        `;
+        updateSummary(0);
+        return;
+      }
+
+      container.innerHTML = items.map(item => `
+        <div class="cart-item" id="ci-${item.key}">
+          <div style="display:flex;align-items:center;gap:1rem;">
+            <div class="cart-thumb">${item.emoji}</div>
+            <div>
+              <div class="cart-name">${item.name}</div>
+              <div class="cart-meta">Talla: ${item.size}</div>
+            </div>
+          </div>
+          <div class="cart-unit">${Fmt.price(item.price)}</div>
+          <div class="qty-stepper" role="group" aria-label="Cantidad">
+            <button class="qty-btn" onclick="chQty('${item.key}',-1)" aria-label="Reducir">−</button>
+            <span class="qty-num">${item.qty}</span>
+            <button class="qty-btn" onclick="chQty('${item.key}',1)" aria-label="Aumentar">+</button>
+          </div>
+          <div class="cart-subtotal price">${Fmt.price(item.price * item.qty)}</div>
+          <button class="cart-remove" onclick="rmItem('${item.key}')" aria-label="Eliminar">✕</button>
         </div>
-        <p id="couponMsg" style="min-height:1.2rem;font-size:var(--text-xs);margin-bottom:var(--sp-4);"></p>
-      </form>
-      <div class="summary-row"><span>Subtotal</span><span id="summarySubtotal">$0</span></div>
-      <div class="summary-row"><span>Envío</span><span id="summaryShipping" style="color:var(--success);font-weight:700;">$0</span></div>
-      <div class="summary-row"><span>Descuento</span><span id="summaryDiscount" style="color:var(--red);">$0</span></div>
-      <div class="summary-row summary-row-total"><span>Total</span><span id="summaryTotal" class="price">$0</span></div>
-      <a href="checkout.html" class="btn btn-primary btn-full" style="margin-top:1.5rem;font-size:var(--text-base);">Proceder al pago →</a>
-      <p style="font-size:.75rem;color:var(--success);text-align:center;margin-top:1rem;">🔒 Compra 100% segura y encriptada</p>
-      <div style="display:flex;gap:.5rem;justify-content:center;flex-wrap:wrap;margin-top:1rem;">
-        <span class="pay-icon">💳 Visa</span><span class="pay-icon">💳 MC</span><span class="pay-icon">🏦 PSE</span><span class="pay-icon">📱 Nequi</span>
-      </div>
-    </aside>
-  </div>
-</div>
-</main>
-<div id="footer-slot"></div>
-<script src="../js/utils.js"></script>
-<script src="../js/store.js"></script>
-<script src="../js/data.js"></script>
-<script src="../js/components.js"></script>
-<script>
-let _discount=0;
-function renderCart(){
-  const items=Store.getCart();
-  const container=document.getElementById('cartItemsContainer');
-  const countEl=document.getElementById('cartCountTitle');
-  const n=Store.cartCount();
-  if(countEl) countEl.textContent=n>0?`(${n} artículo${n!==1?'s':''})`:' ';
-  if(!items.length){
-    container.innerHTML=`<div class="cart-empty"><div class="empty-icon">🛒</div><h3 style="color:var(--navy);">Tu carrito está vacío</h3><p style="color:var(--gray-500);margin:1rem 0;">Agrega productos para empezar</p><a href="catalogue.html" class="btn btn-primary">Ver catálogo</a></div>`;
-    updateSummary(0);return;
-  }
-  container.innerHTML=items.map(item=>`
-    <div class="cart-item" id="ci-${item.key}">
-      <div style="display:flex;align-items:center;gap:1rem;">
-        <div class="cart-thumb">${item.emoji}</div>
-        <div><div class="cart-name">${item.name}</div><div class="cart-meta">Talla: ${item.size}</div></div>
-      </div>
-      <div class="cart-unit">${Fmt.price(item.price)}</div>
-      <div class="qty-stepper" role="group" aria-label="Cantidad">
-        <button class="qty-btn" onclick="chQty('${item.key}',-1)" aria-label="Reducir">−</button>
-        <span class="qty-num">${item.qty}</span>
-        <button class="qty-btn" onclick="chQty('${item.key}',1)" aria-label="Aumentar">+</button>
-      </div>
-      <div class="cart-subtotal price">${Fmt.price(item.price*item.qty)}</div>
-      <button class="cart-remove" onclick="rmItem('${item.key}')" aria-label="Eliminar">✕</button>
-    </div>`).join('');
-  updateSummary(Store.cartTotal());
-}
-function chQty(key,d){const item=Store.getCart().find(i=>i.key===key);if(item)Store.updateQty(key,item.qty+d);renderCart();}
-function rmItem(key){const el=document.getElementById('ci-'+key);if(el){el.style.transition='all .3s';el.style.opacity='0';el.style.transform='translateX(40px)';setTimeout(()=>{Store.removeFromCart(key);renderCart();},300);}else{Store.removeFromCart(key);renderCart();}}
-function updateSummary(sub){
-  const shipping=sub>=150000?0:8000;
-  const total=sub+shipping-_discount;
-  document.getElementById('summarySubtotal').textContent=Fmt.price(sub);
-  document.getElementById('summaryShipping').textContent=shipping===0?'GRATIS':Fmt.price(shipping);
-  document.getElementById('summaryDiscount').textContent=_discount>0?`-${Fmt.price(_discount)}`:'$0';
-  document.getElementById('summaryTotal').textContent=Fmt.price(Math.max(0,total));
-}
-function applyCoupon(e){
-  e.preventDefault();
-  const code=document.getElementById('couponInput').value.trim().toUpperCase();
-  const msg=document.getElementById('couponMsg');
-  const coupon=COUPONS[code];
-  if(coupon){
-    const sub=Store.cartTotal();
-    if(sub<coupon.minOrder){msg.style.color='var(--red)';msg.textContent=`Mínimo de compra: ${Fmt.price(coupon.minOrder)}`;return;}
-    _discount=coupon.type==='percent'?Math.round(sub*coupon.value/100):coupon.value;
-    msg.style.color='var(--success)';msg.textContent=`✅ ${coupon.desc}`;
-    updateSummary(sub);
-  }else{msg.style.color='var(--red)';msg.textContent='❌ Cupón no válido';}
-}
-document.addEventListener('DOMContentLoaded', renderCart);
-Store.on('cart', renderCart);
-</script>
-</body></html>
+      `).join('');
+
+      updateSummary(Store.cartTotal());
+    }
+
+    function chQty(key, d) {
+      const item = Store.getCart().find(i => i.key === key);
+      if (item) Store.updateQty(key, item.qty + d);
+      renderCart();
+    }
+
+    function rmItem(key) {
+      const el = document.getElementById('ci-' + key);
+      if (el) {
+        el.style.transition = 'all .3s';
+        el.style.opacity = '0';
+        el.style.transform = 'translateX(40px)';
+        setTimeout(() => { Store.removeFromCart(key); renderCart(); }, 300);
+      } else {
+        Store.removeFromCart(key);
+        renderCart();
+      }
+    }
+
+    function updateSummary(sub) {
+      const shipping = sub >= 150000 ? 0 : 8000;
+      const total = sub + shipping - _discount;
+      document.getElementById('summarySubtotal').textContent = Fmt.price(sub);
+      document.getElementById('summaryShipping').textContent = shipping === 0 ? 'GRATIS' : Fmt.price(shipping);
+      document.getElementById('summaryDiscount').textContent = _discount > 0 ? `-${Fmt.price(_discount)}` : '$0';
+      document.getElementById('summaryTotal').textContent = Fmt.price(Math.max(0, total));
+    }
+
+    function applyCoupon(e) {
+      e.preventDefault();
+      const code = document.getElementById('couponInput').value.trim().toUpperCase();
+      const msg = document.getElementById('couponMsg');
+      const coupon = COUPONS[code];
+
+      if (coupon) {
+        const sub = Store.cartTotal();
+        if (sub < coupon.minOrder) {
+          msg.style.color = 'var(--red)';
+          msg.textContent = `Mínimo de compra: ${Fmt.price(coupon.minOrder)}`;
+          return;
+        }
+        _discount = coupon.type === 'percent' ? Math.round(sub * coupon.value / 100) : coupon.value;
+        msg.style.color = 'var(--success)';
+        msg.textContent = `✅ ${coupon.desc}`;
+        updateSummary(sub);
+      } else {
+        msg.style.color = 'var(--red)';
+        msg.textContent = '❌ Cupón no válido';
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', renderCart);
+    Store.on('cart', renderCart);
+  </script>
+</body>
+</html>

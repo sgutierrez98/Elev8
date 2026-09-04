@@ -1,0 +1,8 @@
+{
+    "java.configuration.updateBuildConfiguration": "automatic",
+    "java.compile.nullAnalysis.mode": "automatic",
+    "maven.terminal.useJavaHome": true,
+    "java.import.maven.enabled": true,
+    "maven.executable.path": "mvn",
+    "java.jdt.ls.vmargs": "-XX:+UseG1GC"
+}

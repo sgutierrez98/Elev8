@@ -1,109 +1,143 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Iniciar Sesión – Elev8 Sportswear</title>
-  <link rel="stylesheet" href="../css/tokens.css">
-  <link rel="stylesheet" href="../css/layout.css">
-  <link rel="stylesheet" href="../css/components.css">
-  <link rel="stylesheet" href="../css/pages.css">
+  <link rel="stylesheet" href="../css/main.css">
 </head>
 <body>
-<div class="auth-page">
-  <div class="auth-brand">
-    <div class="auth-brand-logo">ELEV8</div>
-    <div class="auth-brand-sub">Sportswear</div>
-    <p class="auth-brand-text">Tu tienda de ropa deportiva de alto rendimiento. Tecnología y estilo para cada entrenamiento.</p>
-    <div class="auth-brand-emoji">👕</div>
-  </div>
-  <div class="auth-form-panel">
-    <div class="auth-box">
-      <div class="auth-tabs" role="tablist">
-        <div class="auth-tab active" role="tab" aria-selected="true" onclick="switchAuthTab('login',this)">Iniciar sesión</div>
-        <div class="auth-tab" role="tab" aria-selected="false" onclick="switchAuthTab('register',this)">Crear cuenta</div>
-      </div>
-      <!-- LOGIN -->
-      <div id="loginPanel" role="tabpanel">
-        <h1 class="auth-title">Bienvenido de nuevo</h1>
-        <p class="auth-subtitle">Ingresa a tu cuenta para continuar</p>
-        <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)" novalidate>
-          <div class="form-group">
-            <label class="form-label" for="loginEmail">Correo electrónico</label>
-            <input class="form-input" type="email" id="loginEmail" placeholder="tu@email.com" required autocomplete="email">
-            <span class="form-error" id="loginEmailErr">Ingresa un correo válido</span>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="loginPass">Contraseña</label>
-            <div class="input-group">
-              <input class="form-input" type="password" id="loginPass" placeholder="••••••••" required autocomplete="current-password">
-              <span class="input-group-icon" onclick="togglePass('loginPass')" aria-label="Mostrar/ocultar contraseña">👁</span>
+  <div class="auth-page">
+    <div class="auth-brand">
+      <div class="auth-brand-logo">ELEV8</div>
+      <div class="auth-brand-sub">Sportswear</div>
+      <p class="auth-brand-text">Tu tienda de ropa deportiva de alto rendimiento. Tecnología y estilo para cada entrenamiento.</p>
+      <div class="auth-brand-emoji">👕</div>
+    </div>
+
+    <div class="auth-form-panel">
+      <div class="auth-box">
+        <div class="auth-tabs" role="tablist">
+          <div class="auth-tab active" role="tab" aria-selected="true" onclick="switchAuthTab('login',this)">Iniciar sesión</div>
+          <div class="auth-tab" role="tab" aria-selected="false" onclick="switchAuthTab('register',this)">Crear cuenta</div>
+        </div>
+
+        <!-- LOGIN -->
+        <div id="loginPanel" role="tabpanel">
+          <h1 class="auth-title">Bienvenido de nuevo</h1>
+          <p class="auth-subtitle">Ingresa a tu cuenta para continuar</p>
+          <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)" novalidate>
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">Correo electrónico</label>
+              <input class="form-input" type="email" id="loginEmail" placeholder="tu@email.com" required autocomplete="email">
             </div>
-            <a href="#" style="font-size:.75rem;color:var(--red);font-weight:600;text-align:right;display:block;margin-top:.25rem;">¿Olvidaste tu contraseña?</a>
-          </div>
-          <label class="check-label"><input type="checkbox"> Recordarme</label>
-          <button type="submit" class="btn btn-primary btn-full btn-lg">Iniciar sesión</button>
-          <div class="auth-divider"><span>O continúa con</span></div>
-          <div class="social-btns">
-            <button type="button" class="social-btn">📧 Google</button>
-            <button type="button" class="social-btn">📘 Facebook</button>
-          </div>
-        </form>
+            <div class="form-group">
+              <label class="form-label" for="loginPass">Contraseña</label>
+              <div class="input-group">
+                <input class="form-input" type="password" id="loginPass" placeholder="••••••••" required autocomplete="current-password">
+                <span class="input-group-icon" onclick="togglePass('loginPass')" aria-label="Mostrar/ocultar contraseña">👁</span>
+              </div>
+              <a href="#" style="font-size:.75rem;color:var(--red);font-weight:600;text-align:right;display:block;margin-top:.25rem;">¿Olvidaste tu contraseña?</a>
+            </div>
+            <label class="check-label"><input type="checkbox"> Recordarme</label>
+            <button type="submit" class="btn btn-primary btn-full btn-lg">Iniciar sesión</button>
+            <div class="auth-divider"><span>O continúa con</span></div>
+            <div class="social-btns">
+              <button type="button" class="social-btn">📧 Google</button>
+              <button type="button" class="social-btn">📘 Facebook</button>
+            </div>
+          </form>
+        </div>
+
+        <!-- REGISTER -->
+        <div id="registerPanel" style="display:none;" role="tabpanel">
+          <h1 class="auth-title">Crear cuenta</h1>
+          <p class="auth-subtitle">Únete y obtén 10% en tu primera compra 🎁</p>
+          <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)" novalidate>
+            <div class="auth-form-row">
+              <div class="form-group">
+                <label class="form-label" for="regNom">Nombre</label>
+                <input class="form-input" type="text" id="regNom" placeholder="Santiago" required>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regApe">Apellido</label>
+                <input class="form-input" type="text" id="regApe" placeholder="García" required>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regEmail">Correo electrónico</label>
+              <input class="form-input" type="email" id="regEmail" placeholder="tu@email.com" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPass">Contraseña</label>
+              <div class="input-group">
+                <input class="form-input" type="password" id="regPass" placeholder="Mínimo 8 caracteres" required minlength="8">
+                <span class="input-group-icon" onclick="togglePass('regPass')">👁</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="regPass2">Confirmar contraseña</label>
+              <div class="input-group">
+                <input class="form-input" type="password" id="regPass2" placeholder="Repite la contraseña" required>
+                <span class="input-group-icon" onclick="togglePass('regPass2')">👁</span>
+              </div>
+            </div>
+            <label class="check-label">
+              <input type="checkbox" required>
+              Acepto los <a href="#" style="color:var(--red);">Términos</a> y la <a href="#" style="color:var(--red);">Política de privacidad</a>
+            </label>
+            <button type="submit" class="btn btn-primary btn-full btn-lg">Crear cuenta gratuita</button>
+          </form>
+        </div>
+
+        <p style="text-align:center;margin-top:1.5rem;font-size:.75rem;color:var(--gray-400);">🔒 Tus datos están protegidos con cifrado SSL</p>
       </div>
-      <!-- REGISTER -->
-      <div id="registerPanel" style="display:none;" role="tabpanel">
-        <h1 class="auth-title">Crear cuenta</h1>
-        <p class="auth-subtitle">Únete y obtén 10% en tu primera compra 🎁</p>
-        <form class="auth-form" id="registerForm" onsubmit="handleRegister(event)" novalidate>
-          <div class="auth-form-row">
-            <div class="form-group"><label class="form-label" for="regNom">Nombre</label><input class="form-input" type="text" id="regNom" placeholder="Santiago" required></div>
-            <div class="form-group"><label class="form-label" for="regApe">Apellido</label><input class="form-input" type="text" id="regApe" placeholder="García" required></div>
-          </div>
-          <div class="form-group"><label class="form-label" for="regEmail">Correo electrónico</label><input class="form-input" type="email" id="regEmail" placeholder="tu@email.com" required></div>
-          <div class="form-group">
-            <label class="form-label" for="regPass">Contraseña</label>
-            <div class="input-group"><input class="form-input" type="password" id="regPass" placeholder="Mínimo 8 caracteres" required minlength="8"><span class="input-group-icon" onclick="togglePass('regPass')">👁</span></div>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="regPass2">Confirmar contraseña</label>
-            <div class="input-group"><input class="form-input" type="password" id="regPass2" placeholder="Repite la contraseña" required><span class="input-group-icon" onclick="togglePass('regPass2')">👁</span></div>
-          </div>
-          <label class="check-label"><input type="checkbox" required> Acepto los <a href="#" style="color:var(--red);">Términos</a> y la <a href="#" style="color:var(--red);">Política de privacidad</a></label>
-          <button type="submit" class="btn btn-primary btn-full btn-lg">Crear cuenta gratuita</button>
-        </form>
-      </div>
-      <p style="text-align:center;margin-top:1.5rem;font-size:.75rem;color:var(--gray-400);">🔒 Tus datos están protegidos con cifrado SSL</p>
     </div>
   </div>
-</div>
-<script src="../js/utils.js"></script>
-<script src="../js/store.js"></script>
-<script src="../js/data.js"></script>
-<script src="../js/components.js"></script>
-<script>
-function switchAuthTab(t,btn){
-  document.querySelectorAll('.auth-tab').forEach((b,i)=>{b.classList.toggle('active',(t==='login'&&i===0)||(t==='register'&&i===1));b.setAttribute('aria-selected',b.classList.contains('active'));});
-  document.getElementById('loginPanel').style.display=t==='login'?'block':'none';
-  document.getElementById('registerPanel').style.display=t==='register'?'block':'none';
-}
-function togglePass(id){const i=document.getElementById(id);i.type=i.type==='password'?'text':'password';}
-function handleLogin(e){
-  e.preventDefault();
-  const email=document.getElementById('loginEmail').value;
-  const pass=document.getElementById('loginPass').value;
-  if(!email||!pass){Toast.show('❌ Completa todos los campos');return;}
-  Store.setUser({name:'Santiago García',email,role:'cliente'});
-  Toast.show('✅ ¡Bienvenido de nuevo!');
-  setTimeout(()=>window.location.href='../index.html',1200);
-}
-function handleRegister(e){
-  e.preventDefault();
-  const p1=document.getElementById('regPass').value;
-  const p2=document.getElementById('regPass2').value;
-  if(p1!==p2){Toast.show('❌ Las contraseñas no coinciden');return;}
-  Store.setUser({name:document.getElementById('regNom').value+' '+document.getElementById('regApe').value,email:document.getElementById('regEmail').value,role:'cliente'});
-  Toast.show('✅ Cuenta creada. ¡Bienvenido!');
-  setTimeout(()=>window.location.href='../index.html',1500);
-}
-if(window.location.hash==='#register') switchAuthTab('register',document.querySelectorAll('.auth-tab')[1]);
-</script>
-</body></html>
+
+  <script src="../js/main.js"></script>
+  <script>
+    function switchAuthTab(t, btn) {
+      document.querySelectorAll('.auth-tab').forEach((b, i) => {
+        b.classList.toggle('active', (t === 'login' && i === 0) || (t === 'register' && i === 1));
+        b.setAttribute('aria-selected', b.classList.contains('active'));
+      });
+      document.getElementById('loginPanel').style.display = t === 'login' ? 'block' : 'none';
+      document.getElementById('registerPanel').style.display = t === 'register' ? 'block' : 'none';
+    }
+
+    function togglePass(id) {
+      const i = document.getElementById(id);
+      i.type = i.type === 'password' ? 'text' : 'password';
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('loginEmail').value;
+      const pass = document.getElementById('loginPass').value;
+      if (!email || !pass) { Toast.show('❌ Completa todos los campos'); return; }
+      Store.setUser({ name: 'Santiago García', email, role: 'cliente' });
+      Toast.show('✅ ¡Bienvenido de nuevo!');
+      setTimeout(() => window.location.href = '../index.html', 1200);
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const p1 = document.getElementById('regPass').value;
+      const p2 = document.getElementById('regPass2').value;
+      if (p1 !== p2) { Toast.show('❌ Las contraseñas no coinciden'); return; }
+      Store.setUser({
+        name: document.getElementById('regNom').value + ' ' + document.getElementById('regApe').value,
+        email: document.getElementById('regEmail').value,
+        role: 'cliente'
+      });
+      Toast.show('✅ Cuenta creada. ¡Bienvenido!');
+      setTimeout(() => window.location.href = '../index.html', 1500);
+    }
+
+    if (window.location.hash === '#register') {
+      switchAuthTab('register', document.querySelectorAll('.auth-tab')[1]);
+    }
+  </script>
+</body>
+</html>
