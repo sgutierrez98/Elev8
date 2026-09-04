@@ -1,0 +1,201 @@
+/* ============================================================
+   ELEV8 SPORTSWEAR – Design System
+   ============================================================ */
+
+:root {
+    --navy: #1A1A2E;
+    --red: #E94560;
+    --red-dark: #C62828;
+    --white: #FFFFFF;
+    --bg: #F5F5F7;
+    --gray-100: #F5F5F7;
+    --gray-200: #EEEEEE;
+    --gray-300: #E0E0E0;
+    --gray-500: #9E9E9E;
+    --gray-600: #757575;
+    --gray-700: #616161;
+    --gray-900: #212121;
+    --success: #2E7D32;
+    --font: 'Segoe UI', Arial, Helvetica, sans-serif;
+    --nav-h: 68px;
+    --container: 1280px;
+    --r-md: 8px;
+    --r-lg: 12px;
+    --r-full: 9999px;
+    --shadow-sm: 0 1px 3px rgba(0,0,0,.08);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.10);
+    --shadow-lg: 0 8px 24px rgba(0,0,0,.14);
+    --t-base: 250ms ease;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font);
+    background: var(--bg);
+    color: var(--gray-900);
+    line-height: 1.6;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+button {
+    cursor: pointer;
+    border: none;
+    background: none;
+    font-family: var(--font);
+}
+
+.container {
+    width: 100%;
+    max-width: var(--container);
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+.page-content {
+    padding-top: var(--nav-h);
+    min-height: 80vh;
+}
+
+/* ── BUTTONS ──────────────────────────────────────────────── */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border-radius: var(--r-md);
+    font-size: 0.875rem;
+    font-weight: 600;
+    transition: all var(--t-base);
+    cursor: pointer;
+    border: 2px solid transparent;
+}
+
+.btn-primary {
+    background: var(--red);
+    color: var(--white);
+    border-color: var(--red);
+}
+.btn-primary:hover {
+    background: var(--red-dark);
+    border-color: var(--red-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 14px rgba(233,69,96,.3);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--white);
+    border-color: var(--white);
+}
+.btn-outline:hover {
+    background: rgba(255,255,255,.12);
+}
+
+.btn-sm {
+    padding: 8px 16px;
+    font-size: 0.8rem;
+}
+.btn-lg {
+    padding: 16px 32px;
+    font-size: 1rem;
+}
+.btn-full {
+    width: 100%;
+}
+
+/* ── HERO ──────────────────────────────────────────────────── */
+.hero {
+    background: var(--navy);
+    min-height: 85vh;
+    display: flex;
+    align-items: center;
+    position: relative;
+    overflow: hidden;
+}
+.hero-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
+    align-items: center;
+    padding: 64px 0;
+    position: relative;
+    z-index: 1;
+}
+.hero-title {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 24px;
+}
+.hero-title-accent {
+    color: var(--red);
+}
+.hero-subtitle {
+    font-size: 1.125rem;
+    color: rgba(255,255,255,.65);
+    line-height: 1.7;
+    max-width: 480px;
+    margin-bottom: 32px;
+}
+.hero-actions {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+.hero-visual {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.hero-card {
+    background: rgba(255,255,255,.06);
+    backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.12);
+    border-radius: 20px;
+    padding: 48px 32px;
+    text-align: center;
+    width: 300px;
+}
+.hero-card-emoji {
+    font-size: 5rem;
+    margin-bottom: 16px;
+}
+.hero-card-name {
+    color: rgba(255,255,255,.85);
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+.hero-card-price {
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--red);
+    margin-bottom: 20px;
+}
+
+/* ── RESPONSIVE ───────────────────────────────────────────── */
+@media (max-width: 768px) {
+    .hero-inner {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    .hero-visual {
+        display: none;
+    }
+    .hero-subtitle {
+        margin: 0 auto 32px;
+    }
+    .hero-actions {
+        justify-content: center;
+    }
+}
