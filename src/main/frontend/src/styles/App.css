@@ -1,0 +1,26 @@
+/**
+ * Estilos del componente App
+ * @author Elev8 Sportswear Team
+ * @version 1.0.0
+ */
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  padding: 20px;
+}
+
+.app h1 {
+  color: var(--navy);
+  font-size: 2.5rem;
+  margin-bottom: 16px;
+}
+
+.app p {
+  color: var(--gray-500);
+  font-size: 1.2rem;
+}

@@ -1,0 +1,160 @@
+/**
+ * Estilos del Catálogo - Elev8 Sportswear
+ * @author Elev8 Sportswear Team
+ * @version 1.0.0
+ */
+
+.catalogue-page {
+  padding: 40px 0;
+  min-height: 60vh;
+}
+
+.catalogue-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.catalogue-header h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1A1A2E;
+}
+
+.catalogue-count {
+  color: #9E9E9E;
+  font-size: 1rem;
+}
+
+.catalogue-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: 32px;
+}
+
+/* Filtros */
+.filters-sidebar {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+}
+
+.filters-sidebar h3 {
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: #1A1A2E;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 16px;
+}
+
+.filters-list {
+  list-style: none;
+  padding: 0;
+}
+
+.filters-list li {
+  margin-bottom: 4px;
+}
+
+.filters-list a {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #616161;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.filters-list a:hover {
+  background: #F5F5F7;
+  color: #1A1A2E;
+}
+
+.filters-list a.active {
+  background: #FFF0F3;
+  color: #E94560;
+  font-weight: 600;
+}
+
+.filters-divider {
+  height: 1px;
+  background: #F5F5F7;
+  margin: 16px 0;
+}
+
+.filter-link {
+  display: block;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #E94560;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.filter-link:hover {
+  background: #FFF0F3;
+}
+
+/* Productos */
+.catalogue-products {
+  flex: 1;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+/* Mensajes de error y sin productos */
+.error-container,
+.no-products {
+  text-align: center;
+  padding: 40px;
+}
+
+.error-message {
+  color: #C62828;
+  margin-bottom: 16px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .catalogue-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .filters-sidebar {
+    position: static;
+  }
+
+  .catalogue-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+}

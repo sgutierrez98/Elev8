@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/elev8/react/static/css/main.ca38695d.css",
+    "main.js": "/elev8/react/static/js/main.f7096af6.js",
+    "index.html": "/elev8/react/index.html",
+    "main.ca38695d.css.map": "/elev8/react/static/css/main.ca38695d.css.map",
+    "main.f7096af6.js.map": "/elev8/react/static/js/main.f7096af6.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ca38695d.css",
+    "static/js/main.f7096af6.js"
+  ]
+}

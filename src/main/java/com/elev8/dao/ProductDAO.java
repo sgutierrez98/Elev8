@@ -137,12 +137,136 @@ public class ProductDAO {
         return products;
     }
 
+    // Método para guardar (insertar o actualizar)
+    public Product save(Product product) {
+        if (product.getId() == 0) {
+            return insert(product);
+        } else {
+            return update(product);
+        }
+    }
+
+    private Product insert(Product product) {
+        String sql = "INSERT INTO products (sku, name, category_id, emoji, price, old_price, " +
+                     "rating, reviews, badge, brand, description, stock, active) " +
+                     "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            ps.setString(1, product.getSku());
+            ps.setString(2, product.getName());
+            ps.setString(3, product.getCategoryId());
+            ps.setString(4, product.getEmoji());
+            ps.setInt(5, product.getPrice());
+            
+            if (product.getOldPrice() > 0) {
+                ps.setInt(6, product.getOldPrice());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
+            
+            ps.setDouble(7, product.getRating() > 0 ? product.getRating() : 0);
+            ps.setInt(8, product.getReviews() > 0 ? product.getReviews() : 0);
+            
+            if (product.getBadge() != null && !product.getBadge().isEmpty()) {
+                ps.setString(9, product.getBadge());
+            } else {
+                ps.setNull(9, Types.VARCHAR);
+            }
+            
+            ps.setString(10, product.getBrand());
+            ps.setString(11, product.getDescription());
+            ps.setInt(12, product.getStock() > 0 ? product.getStock() : 0);
+            ps.setBoolean(13, true);
+
+            int affectedRows = ps.executeUpdate();
+
+            if (affectedRows == 0) {
+                throw new SQLException("Error al insertar producto");
+            }
+
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    product.setId(generatedKeys.getInt(1));
+                }
+            }
+
+            return product;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Product update(Product product) {
+        String sql = "UPDATE products SET sku = ?, name = ?, category_id = ?, emoji = ?, " +
+                     "price = ?, old_price = ?, rating = ?, reviews = ?, " +
+                     "badge = ?, brand = ?, description = ?, stock = ?, " +
+                     "updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setString(1, product.getSku());
+            ps.setString(2, product.getName());
+            ps.setString(3, product.getCategoryId());
+            ps.setString(4, product.getEmoji());
+            ps.setInt(5, product.getPrice());
+            
+            if (product.getOldPrice() > 0) {
+                ps.setInt(6, product.getOldPrice());
+            } else {
+                ps.setNull(6, Types.INTEGER);
+            }
+            
+            ps.setDouble(7, product.getRating() > 0 ? product.getRating() : 0);
+            ps.setInt(8, product.getReviews() > 0 ? product.getReviews() : 0);
+            
+            if (product.getBadge() != null && !product.getBadge().isEmpty()) {
+                ps.setString(9, product.getBadge());
+            } else {
+                ps.setNull(9, Types.VARCHAR);
+            }
+            
+            ps.setString(10, product.getBrand());
+            ps.setString(11, product.getDescription());
+            ps.setInt(12, product.getStock() > 0 ? product.getStock() : 0);
+            ps.setInt(13, product.getId());
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0 ? product : null;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public boolean delete(int id) {
+        String sql = "DELETE FROM products WHERE id = ?";
+
+        try (Connection conn = DatabaseConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+            int affectedRows = ps.executeUpdate();
+            return affectedRows > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
     private Product mapResultSetToProduct(ResultSet rs) throws SQLException {
         Product product = new Product();
         product.setId(rs.getInt("id"));
         product.setSku(rs.getString("sku"));
         product.setName(rs.getString("name"));
         product.setCategory(rs.getString("category_name"));
+        product.setCategoryId(rs.getString("category_id"));
         product.setEmoji(rs.getString("emoji"));
         product.setPrice(rs.getInt("price"));
         product.setOldPrice(rs.getInt("old_price"));
@@ -152,6 +276,7 @@ public class ProductDAO {
         product.setBrand(rs.getString("brand"));
         product.setDescription(rs.getString("description"));
         product.setStock(rs.getInt("stock"));
+        product.setActive(rs.getBoolean("active"));
         return product;
     }
 }

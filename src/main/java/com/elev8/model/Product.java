@@ -5,6 +5,7 @@ public class Product {
     private String sku;
     private String name;
     private String category;
+    private String categoryId;
     private String emoji;
     private int price;
     private int oldPrice;
@@ -14,9 +15,11 @@ public class Product {
     private int stock;
     private double rating;
     private int reviews;
+    private boolean active;
 
     public Product() {}
 
+    // Constructor con parámetros básicos
     public Product(int id, String name, String category, String emoji, int price, int oldPrice, String badge, String description) {
         this.id = id;
         this.name = name;
@@ -40,6 +43,9 @@ public class Product {
 
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
+
+    public String getCategoryId() { return categoryId; }
+    public void setCategoryId(String categoryId) { this.categoryId = categoryId; }
 
     public String getEmoji() { return emoji; }
     public void setEmoji(String emoji) { this.emoji = emoji; }
@@ -67,6 +73,9 @@ public class Product {
 
     public int getReviews() { return reviews; }
     public void setReviews(int reviews) { this.reviews = reviews; }
+
+    public boolean isActive() { return active; }
+    public void setActive(boolean active) { this.active = active; }
 
     public int getDiscount() {
         if (oldPrice > 0 && oldPrice > price) {

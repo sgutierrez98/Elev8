@@ -34,6 +34,15 @@ public class ProductService {
         return productDAO.findPopular();
     }
 
+    // Método con límite (para la API)
+    public List<Product> getPopularProducts(int limit) {
+        List<Product> popular = productDAO.findPopular();
+        if (popular.size() > limit) {
+            return popular.subList(0, limit);
+        }
+        return popular;
+    }
+
     public List<Product> getProductsOnSale() {
         return productDAO.findOnSale();
     }
@@ -44,6 +53,27 @@ public class ProductService {
 
         String categoryId = mapCategoryNameToId(product.getCategory());
         return productDAO.findRelated(productId, categoryId);
+    }
+
+    // Método para crear producto (para la API)
+    public Product createProduct(Product product) {
+        if (product == null) {
+            return null;
+        }
+        return productDAO.save(product);
+    }
+
+    // Método para actualizar producto
+    public Product updateProduct(Product product) {
+        if (product == null || product.getId() == 0) {
+            return null;
+        }
+        return productDAO.save(product);
+    }
+
+    // Método para eliminar producto
+    public boolean deleteProduct(int id) {
+        return productDAO.delete(id);
     }
 
     private String mapCategoryNameToId(String categoryName) {

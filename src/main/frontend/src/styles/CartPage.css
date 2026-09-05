@@ -1,0 +1,320 @@
+/**
+ * Estilos del Carrito - Elev8 Sportswear
+ * @author Elev8 Sportswear Team
+ * @version 1.0.0
+ */
+
+.cart-page {
+  padding: 40px 0;
+  min-height: 60vh;
+}
+
+.cart-page h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1A1A2E;
+  margin-bottom: 24px;
+}
+
+/* Alertas */
+.alert {
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-bottom: 16px;
+}
+
+.alert-success {
+  background: #E8F5E9;
+  color: #2E7D32;
+  border-left: 4px solid #2E7D32;
+}
+
+.alert-error {
+  background: #FFF0F3;
+  color: #C62828;
+  border-left: 4px solid #C62828;
+}
+
+/* Layout */
+.cart-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 32px;
+}
+
+/* Items del carrito */
+.cart-header {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 40px;
+  gap: 16px;
+  padding: 12px 16px;
+  background: #1A1A2E;
+  border-radius: 8px;
+  color: #FFFFFF;
+  font-weight: 700;
+  font-size: 0.875rem;
+  margin-bottom: 8px;
+}
+
+.cart-item {
+  display: grid;
+  grid-template-columns: 3fr 1fr 1fr 1fr 40px;
+  gap: 16px;
+  align-items: center;
+  padding: 16px;
+  background: #FFFFFF;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.cart-item-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-item-emoji {
+  font-size: 2rem;
+}
+
+.cart-item-name {
+  font-weight: 700;
+  color: #1A1A2E;
+}
+
+.cart-item-meta {
+  font-size: 0.75rem;
+  color: #9E9E9E;
+}
+
+.cart-item-price {
+  font-weight: 700;
+}
+
+.cart-item-quantity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.qty-btn {
+  width: 28px;
+  height: 28px;
+  border: 1px solid #E0E0E0;
+  border-radius: 4px;
+  font-weight: 700;
+  cursor: pointer;
+  background: #FFFFFF;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.qty-btn:hover:not(:disabled) {
+  background: #F5F5F7;
+}
+
+.qty-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.qty-number {
+  font-weight: 700;
+  min-width: 30px;
+  text-align: center;
+}
+
+.cart-item-subtotal {
+  font-weight: 800;
+  color: #E94560;
+}
+
+.cart-item-remove {
+  color: #BDBDBD;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 4px;
+}
+
+.cart-item-remove:hover {
+  color: #E94560;
+}
+
+/* Acciones */
+.cart-actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 24px;
+}
+
+.btn-ghost {
+  background: transparent;
+  color: #616161;
+  border: 2px solid transparent;
+}
+
+.btn-ghost:hover {
+  background: #F5F5F7;
+}
+
+.btn-danger {
+  color: #E94560;
+}
+
+.btn-danger:hover {
+  background: #FFF0F3;
+}
+
+/* Resumen */
+.cart-summary {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.10);
+  height: fit-content;
+  position: sticky;
+  top: 90px;
+}
+
+.cart-summary h2 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1A1A2E;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #F5F5F7;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 0;
+}
+
+.summary-row span:first-child {
+  color: #616161;
+}
+
+.free-shipping {
+  color: #2E7D32;
+  font-weight: 700;
+}
+
+.summary-total {
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 0;
+  border-top: 1px solid #F5F5F7;
+  font-size: 1.2rem;
+  font-weight: 900;
+}
+
+.total-price {
+  color: #E94560;
+}
+
+.payment-icons {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 16px;
+}
+
+.payment-icons span {
+  padding: 4px 10px;
+  background: #F5F5F7;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  color: #616161;
+  font-weight: 600;
+}
+
+.secure-text {
+  font-size: 0.75rem;
+  color: #2E7D32;
+  text-align: center;
+  margin-top: 8px;
+}
+
+/* Empty cart */
+.empty-cart {
+  background: #FFFFFF;
+  border-radius: 12px;
+  padding: 60px;
+  text-align: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.empty-cart-icon {
+  font-size: 4rem;
+  margin-bottom: 16px;
+}
+
+.empty-cart h3 {
+  color: #1A1A2E;
+  font-size: 1.25rem;
+  margin-bottom: 8px;
+}
+
+.empty-cart p {
+  color: #9E9E9E;
+  margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .cart-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .cart-header {
+    display: none;
+  }
+
+  .cart-item {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    padding: 16px;
+  }
+
+  .cart-item-info {
+    grid-column: 1 / -1;
+  }
+
+  .cart-item-price {
+    grid-column: 1;
+  }
+
+  .cart-item-quantity {
+    grid-column: 2;
+    justify-self: flex-end;
+  }
+
+  .cart-item-subtotal {
+    grid-column: 1 / -1;
+    text-align: right;
+    font-size: 1.1rem;
+  }
+
+  .cart-item-remove {
+    grid-column: 2;
+    justify-self: flex-end;
+  }
+
+  .cart-actions {
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cart-actions .btn {
+    width: 100%;
+  }
+}

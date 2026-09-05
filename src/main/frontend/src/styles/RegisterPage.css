@@ -1,0 +1,33 @@
+/**
+ * Estilos del Registro - Elev8 Sportswear
+ * @author Elev8 Sportswear Team
+ * @version 1.0.0
+ */
+
+.register-page {
+  padding: 40px 0;
+  min-height: 60vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.register-page .container {
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 0 24px;
+  text-align: center;
+}
+
+.register-page h1 {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #1A1A2E;
+  margin-bottom: 16px;
+}
+
+.register-page p {
+  color: #9E9E9E;
+  margin-bottom: 24px;
+  font-size: 1.1rem;
+}

@@ -6,6 +6,7 @@ import com.elev8.model.OrderItem;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class OrderService {
 
@@ -39,5 +40,9 @@ public class OrderService {
 
     public Order getOrderById(int id) {
         return orderDAO.findById(id);
+    }
+
+    public List<Order> getOrdersByUserId(int userId) {
+        return orderDAO.findByUserId(userId);
     }
 }
