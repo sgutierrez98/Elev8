@@ -1,5 +1,6 @@
 /**
  * Servicio base de API - Elev8 Sportswear
+ * Configuración de Axios para comunicarse con el backend Java
  * @author Elev8 Sportswear Team
  * @version 1.0.0
  */
@@ -8,11 +9,10 @@ import axios from 'axios';
 
 /**
  * Configuración base de Axios
- * Usa el proxy de React (configurado en package.json)
+ * Usa el proxy de React para evitar problemas de CORS
  */
 const api = axios.create({
-  // Usa una URL relativa, el proxy de React la redirigirá
-  baseURL: '',
+  baseURL: '/elev8',
   headers: {
     'Content-Type': 'application/json',
   },
@@ -21,37 +21,35 @@ const api = axios.create({
 
 /**
  * Interceptor de peticiones
+ * Agrega el token de autenticación si existe
  */
 api.interceptors.request.use(
   (config) => {
-    // Ajustar la URL para que el proxy funcione
-    if (config.url && !config.url.startsWith('http')) {
-      config.url = config.url.startsWith('/') ? config.url : '/' + config.url;
-    }
-    
     const token = localStorage.getItem('token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
-    console.log('📤 Petición:', config.method.toUpperCase(), config.url);
+    console.log(`📤 Petición: ${config.method.toUpperCase()} ${config.url}`);
     return config;
   },
   (error) => {
+    console.error('❌ Error en petición:', error);
     return Promise.reject(error);
   }
 );
 
 /**
  * Interceptor de respuestas
+ * Maneja errores de autenticación (401)
  */
 api.interceptors.response.use(
   (response) => {
-    console.log('📥 Respuesta:', response.status, response.config.url);
+    console.log(`📥 Respuesta: ${response.status} ${response.config.url}`);
     return response;
   },
   (error) => {
-    console.error('❌ Error API:', error);
-    
+    console.error('❌ Error en respuesta:', error.response?.status, error.response?.data);
+
     if (error.response && error.response.status === 401) {
       localStorage.removeItem('user');
       localStorage.removeItem('token');

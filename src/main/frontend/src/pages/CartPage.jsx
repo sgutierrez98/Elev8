@@ -6,16 +6,16 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { 
-  getCart, 
-  removeFromCart, 
-  updateQuantity, 
-  clearCart, 
+import {
+  getCart,
+  removeFromCart,
+  updateQuantity,
+  clearCart,
   getCartTotals,
-  isCartEmpty 
+  isCartEmpty
 } from '../services/cartService';
 import { formatPrice } from '../utils/helpers';
-import '../styles/CartPage.css';
+import './CartPage.css';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -31,7 +31,6 @@ const CartPage = () => {
   useEffect(() => {
     loadCart();
 
-    // Escuchar cambios en el carrito
     const handleCartUpdate = () => {
       loadCart();
     };
@@ -105,8 +104,6 @@ const CartPage = () => {
                   <span className="cart-item-emoji">{item.emoji || '📦'}</span>
                   <div>
                     <div className="cart-item-name">{item.name}</div>
-                    {item.size && <div className="cart-item-meta">Talla: {item.size}</div>}
-                    {item.color && <div className="cart-item-meta">Color: {item.color}</div>}
                   </div>
                 </div>
                 <div className="cart-item-price">{formatPrice(item.price)}</div>

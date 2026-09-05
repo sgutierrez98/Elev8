@@ -1,6 +1,6 @@
 /**
  * Elev8 Sportswear - Frontend React
- * Punto de entrada principal de la aplicación
+ * Punto de entrada principal
  * @author Elev8 Sportswear Team
  * @version 1.0.0
  */
