@@ -10,16 +10,11 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * API REST para Autenticación
- * Endpoint: /api/auth
- * @author Elev8 Sportswear Team
- * @version 1.0.0
- */
 @WebServlet("/api/auth/*")
 public class AuthApiServlet extends HttpServlet {
 
@@ -42,23 +37,31 @@ public class AuthApiServlet extends HttpServlet {
         String pathInfo = req.getPathInfo();
 
         try {
-            Map<String, String> requestData = gson.fromJson(req.getReader(), Map.class);
+            // Leer el body de la petición
+            StringBuilder sb = new StringBuilder();
+            BufferedReader reader = req.getReader();
+            String line;
+            while ((line = reader.readLine()) != null) {
+                sb.append(line);
+            }
+            String jsonBody = sb.toString();
+            System.out.println("📥 Body recibido: " + jsonBody);
+
+            Map<String, String> requestData = gson.fromJson(jsonBody, Map.class);
 
             if ("/login".equals(pathInfo)) {
                 handleLogin(req, resp, requestData);
             } else if ("/register".equals(pathInfo)) {
                 handleRegister(req, resp, requestData);
-            } else if ("/logout".equals(pathInfo)) {
-                handleLogout(req, resp);
             } else {
                 resp.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 resp.getWriter().write("{\"error\":\"Endpoint no encontrado\"}");
             }
 
         } catch (Exception e) {
+            e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             resp.getWriter().write("{\"error\":\"" + e.getMessage() + "\"}");
-            e.printStackTrace();
         }
     }
 
@@ -68,7 +71,15 @@ public class AuthApiServlet extends HttpServlet {
         String email = data.get("email");
         String password = data.get("password");
 
-        User user = userService.authenticate(email, password);
+        System.out.println("🔐 Login intento: " + email);
+
+        if (email == null || email.trim().isEmpty() || password == null || password.trim().isEmpty()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"error\":\"Email y contraseña son obligatorios\"}");
+            return;
+        }
+
+        User user = userService.authenticate(email.trim(), password);
 
         if (user != null) {
             HttpSession session = req.getSession();
@@ -79,9 +90,12 @@ public class AuthApiServlet extends HttpServlet {
             response.put("success", true);
             response.put("user", user);
             response.put("message", "Login exitoso");
+            response.put("token", "dummy-token-" + System.currentTimeMillis());
 
+            System.out.println("✅ Login exitoso: " + email);
             resp.getWriter().write(gson.toJson(response));
         } else {
+            System.out.println("❌ Login fallido: " + email);
             resp.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
             resp.getWriter().write("{\"error\":\"Correo o contraseña incorrectos\"}");
         }
@@ -90,12 +104,39 @@ public class AuthApiServlet extends HttpServlet {
     private void handleRegister(HttpServletRequest req, HttpServletResponse resp,
                                 Map<String, String> data) throws IOException {
 
+        String email = data.get("email");
+        String password = data.get("password");
+        String firstName = data.get("firstName");
+        String lastName = data.get("lastName");
+        String phone = data.get("phone");
+
+        System.out.println("📝 Registro intento: " + email);
+
+        // Validaciones
+        if (email == null || email.trim().isEmpty()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"error\":\"El correo es obligatorio\"}");
+            return;
+        }
+
+        if (password == null || password.trim().isEmpty() || password.length() < 6) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"error\":\"La contraseña debe tener al menos 6 caracteres\"}");
+            return;
+        }
+
+        if (firstName == null || firstName.trim().isEmpty()) {
+            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            resp.getWriter().write("{\"error\":\"El nombre es obligatorio\"}");
+            return;
+        }
+
         User user = new User();
-        user.setEmail(data.get("email"));
-        user.setPassword(data.get("password"));
-        user.setFirstName(data.get("firstName"));
-        user.setLastName(data.get("lastName"));
-        user.setPhone(data.get("phone"));
+        user.setEmail(email.trim());
+        user.setPassword(password);
+        user.setFirstName(firstName.trim());
+        user.setLastName(lastName != null ? lastName.trim() : "");
+        user.setPhone(phone != null ? phone.trim() : "");
 
         User created = userService.register(user);
 
@@ -103,18 +144,13 @@ public class AuthApiServlet extends HttpServlet {
             Map<String, Object> response = new HashMap<>();
             response.put("success", true);
             response.put("message", "Usuario registrado correctamente");
+
+            System.out.println("✅ Registro exitoso: " + email);
             resp.getWriter().write(gson.toJson(response));
         } else {
+            System.out.println("❌ Registro fallido: " + email + " (email ya registrado)");
             resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             resp.getWriter().write("{\"error\":\"El correo ya está registrado\"}");
         }
-    }
-
-    private void handleLogout(HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        HttpSession session = req.getSession(false);
-        if (session != null) {
-            session.invalidate();
-        }
-        resp.getWriter().write("{\"success\":true,\"message\":\"Sesión cerrada\"}");
     }
 }

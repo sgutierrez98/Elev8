@@ -15,35 +15,42 @@ import api from './api';
  */
 export const login = async (email, password) => {
   try {
+    console.log('🔐 Intentando login:', email);
+
     const response = await api.post('/api/auth/login', { email, password });
-    
+
+    console.log('📥 Respuesta login:', response.data);
+
     if (response.data.success) {
       localStorage.setItem('user', JSON.stringify(response.data.user));
       localStorage.setItem('token', response.data.token || 'dummy-token');
       localStorage.setItem('isLoggedIn', 'true');
-      
-      // Disparar evento para actualizar el navbar
       window.dispatchEvent(new Event('authChanged'));
     }
-    
+
     return response.data;
   } catch (error) {
-    console.error('Error en login:', error);
+    console.error('❌ Error en login:', error.response?.data || error.message);
     throw error;
   }
 };
 
 /**
  * Registrar nuevo usuario
- * @param {Object} userData - Datos del usuario (email, password, firstName, lastName, phone)
+ * @param {Object} userData - Datos del usuario
  * @returns {Promise} - Resultado del registro
  */
 export const register = async (userData) => {
   try {
+    console.log('📝 Intentando registro:', userData.email);
+
     const response = await api.post('/api/auth/register', userData);
+
+    console.log('📥 Respuesta registro:', response.data);
+
     return response.data;
   } catch (error) {
-    console.error('Error en registro:', error);
+    console.error('❌ Error en registro:', error.response?.data || error.message);
     throw error;
   }
 };
@@ -56,10 +63,9 @@ export const logout = (redirect = true) => {
   localStorage.removeItem('user');
   localStorage.removeItem('token');
   localStorage.removeItem('isLoggedIn');
-  
-  // Disparar evento para actualizar el navbar
+
   window.dispatchEvent(new Event('authChanged'));
-  
+
   if (redirect) {
     window.location.href = '/';
   }
@@ -89,25 +95,4 @@ export const getCurrentUser = () => {
     }
   }
   return null;
-};
-
-/**
- * Verificar si el usuario es administrador
- * @returns {boolean} - true si es administrador
- */
-export const isAdmin = () => {
-  const user = getCurrentUser();
-  return user && user.role === 'ADMIN';
-};
-
-/**
- * Obtener el nombre completo del usuario
- * @returns {string} - Nombre completo o "Usuario"
- */
-export const getUserName = () => {
-  const user = getCurrentUser();
-  if (user) {
-    return user.firstName || user.name || 'Usuario';
-  }
-  return 'Usuario';
 };

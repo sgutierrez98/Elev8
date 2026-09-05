@@ -1,5 +1,6 @@
 /**
  * Servicio de Productos - Elev8 Sportswear
+ * Maneja operaciones CRUD de productos
  * @author Elev8 Sportswear Team
  * @version 1.0.0
  */
@@ -8,11 +9,12 @@ import api from './api';
 
 /**
  * Obtener todos los productos
+ * @param {Object} params - Parámetros de filtro
+ * @returns {Promise} - Lista de productos
  */
 export const getProducts = async (params = {}) => {
   try {
-    // Usar URL absoluta para que el proxy funcione
-    const response = await api.get('/elev8/api/products', { params });
+    const response = await api.get('/api/products', { params });
     return response.data;
   } catch (error) {
     console.error('Error al obtener productos:', error);
@@ -21,11 +23,28 @@ export const getProducts = async (params = {}) => {
 };
 
 /**
+ * Obtener un producto por ID
+ * @param {number} id - ID del producto
+ * @returns {Promise} - Datos del producto
+ */
+export const getProductById = async (id) => {
+  try {
+    const response = await api.get(`/api/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error(`Error al obtener producto ${id}:`, error);
+    throw error;
+  }
+};
+
+/**
  * Obtener productos populares
+ * @param {number} limit - Cantidad de productos
+ * @returns {Promise} - Lista de productos populares
  */
 export const getPopularProducts = async (limit = 4) => {
   try {
-    const response = await api.get('/elev8/api/products/popular', { params: { limit } });
+    const response = await api.get('/api/products/popular', { params: { limit } });
     return response.data;
   } catch (error) {
     console.error('Error al obtener productos populares:', error);
@@ -35,10 +54,11 @@ export const getPopularProducts = async (limit = 4) => {
 
 /**
  * Obtener productos en oferta
+ * @returns {Promise} - Lista de productos en oferta
  */
 export const getProductsOnSale = async () => {
   try {
-    const response = await api.get('/elev8/api/products/onsale');
+    const response = await api.get('/api/products/onsale');
     return response.data;
   } catch (error) {
     console.error('Error al obtener productos en oferta:', error);
@@ -47,37 +67,13 @@ export const getProductsOnSale = async () => {
 };
 
 /**
- * Obtener producto por ID
- */
-export const getProductById = async (id) => {
-  try {
-    const response = await api.get(`/elev8/api/products/${id}`);
-    return response.data;
-  } catch (error) {
-    console.error(`Error al obtener producto ${id}:`, error);
-    throw error;
-  }
-};
-
-/**
- * Buscar productos
- */
-export const searchProducts = async (searchText) => {
-  try {
-    const response = await api.get('/elev8/api/products', { params: { search: searchText } });
-    return response.data;
-  } catch (error) {
-    console.error(`Error al buscar productos "${searchText}":`, error);
-    throw error;
-  }
-};
-
-/**
  * Obtener productos por categoría
+ * @param {string} category - ID de la categoría
+ * @returns {Promise} - Lista de productos
  */
 export const getProductsByCategory = async (category) => {
   try {
-    const response = await api.get('/elev8/api/products', { params: { category } });
+    const response = await api.get('/api/products', { params: { category } });
     return response.data;
   } catch (error) {
     console.error(`Error al obtener productos de categoría ${category}:`, error);
