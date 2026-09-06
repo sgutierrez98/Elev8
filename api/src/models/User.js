@@ -1,6 +1,5 @@
 /**
- * Modelo de Usuario - Elev8 Auth API
- * Define la estructura de usuarios en MongoDB
+ * Modelo de Usuario - Elev8 API
  * @author Elev8 Sportswear Team
  * @version 1.0.0
  */
@@ -8,10 +7,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
-/**
- * Esquema de Usuario
- * Define los campos y validaciones para el registro de usuarios
- */
 const UserSchema = new mongoose.Schema(
   {
     email: {
@@ -59,19 +54,12 @@ const UserSchema = new mongoose.Schema(
     },
   },
   {
-    timestamps: true, // Agrega createdAt y updatedAt
+    timestamps: true,
   }
 );
 
-/**
- * Middleware pre-save: Hashea la contraseña antes de guardar
- */
 UserSchema.pre('save', async function (next) {
-  // Solo hashear si la contraseña fue modificada
-  if (!this.isModified('password')) {
-    return next();
-  }
-
+  if (!this.isModified('password')) return next();
   try {
     const salt = await bcrypt.genSalt(10);
     this.password = await bcrypt.hash(this.password, salt);
@@ -81,19 +69,10 @@ UserSchema.pre('save', async function (next) {
   }
 });
 
-/**
- * Método para comparar contraseñas
- * @param {string} candidatePassword - Contraseña a comparar
- * @returns {boolean} - true si coinciden
- */
 UserSchema.methods.comparePassword = async function (candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-/**
- * Método para ocultar información sensible del usuario
- * @returns {Object} - Usuario sin contraseña ni campos sensibles
- */
 UserSchema.methods.toJSON = function () {
   const user = this.toObject();
   delete user.password;
