@@ -1,6 +1,5 @@
 /**
- * Servidor de Autenticación - Elev8 Auth API
- * Punto de entrada principal para el servicio de autenticación
+ * Servidor Principal - Elev8 API
  * @author Elev8 Sportswear Team
  * @version 1.0.0
  */
@@ -8,10 +7,15 @@
 const express = require('express');
 const cors = require('cors');
 const connectDB = require('./config/database');
-const authRoutes = require('./routes/authRoutes');
 require('dotenv').config();
 
-// Inicializar Express
+// Importar rutas
+const authRoutes = require('./routes/authRoutes');
+const productRoutes = require('./routes/productRoutes');
+const categoryRoutes = require('./routes/categoryRoutes');
+const cartRoutes = require('./routes/cartRoutes');
+const orderRoutes = require('./routes/orderRoutes');
+
 const app = express();
 
 // Configuración de CORS
@@ -21,12 +25,11 @@ const corsOptions = {
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
 };
-
 app.use(cors(corsOptions));
 
 // Middlewares
-app.use(express.json()); // Parsear JSON
-app.use(express.urlencoded({ extended: true })); // Parsear URL-encoded
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // Conectar a MongoDB
 connectDB();
@@ -34,23 +37,28 @@ connectDB();
 // Puerto del servidor
 const PORT = process.env.PORT || 5000;
 
-// Ruta de prueba (health check)
+// Ruta de prueba
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: '🚀 Elev8 Auth API funcionando correctamente',
+    message: '🚀 Elev8 API funcionando correctamente',
     version: '1.0.0',
     endpoints: {
-      register: 'POST /api/auth/register',
-      login: 'POST /api/auth/login',
-      verify: 'GET /api/auth/verify',
-      profile: 'GET /api/auth/profile',
+      auth: '/api/auth',
+      products: '/api/products',
+      categories: '/api/categories',
+      cart: '/api/cart',
+      orders: '/api/orders',
     },
   });
 });
 
-// Rutas de autenticación
+// Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/categories', categoryRoutes);
+app.use('/api/cart', cartRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Manejador de errores 404
 app.use((req, res) => {
@@ -72,9 +80,13 @@ app.use((err, req, res, next) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`✅ Servidor de autenticación corriendo en http://localhost:${PORT}`);
-  console.log(`📋 Registro: POST http://localhost:${PORT}/api/auth/register`);
-  console.log(`📋 Login: POST http://localhost:${PORT}/api/auth/login`);
+  console.log(`✅ Servidor Elev8 API corriendo en http://localhost:${PORT}`);
+  console.log(`📋 Endpoints disponibles:`);
+  console.log(`   🔐 Auth: http://localhost:${PORT}/api/auth`);
+  console.log(`   📦 Products: http://localhost:${PORT}/api/products`);
+  console.log(`   📂 Categories: http://localhost:${PORT}/api/categories`);
+  console.log(`   🛒 Cart: http://localhost:${PORT}/api/cart`);
+  console.log(`   📦 Orders: http://localhost:${PORT}/api/orders`);
 });
 
 module.exports = app;

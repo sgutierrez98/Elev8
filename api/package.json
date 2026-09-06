@@ -1,13 +1,13 @@
 {
-  "name": "elev8-api-auth",
+  "name": "elev8-api",
   "version": "1.0.0",
-  "description": "Servicio de autenticación para Elev8 Sportswear",
+  "description": "API completa para Elev8 Sportswear - Autenticación, Productos, Carrito, Pedidos",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "dev": "nodemon src/app.js"
   },
-  "keywords": ["auth", "jwt", "express", "mongodb"],
+  "keywords": ["elev8", "api", "ecommerce", "nodejs", "express", "mongodb"],
   "author": "Elev8 Sportswear Team",
   "license": "ISC",
   "dependencies": {
