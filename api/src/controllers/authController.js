@@ -9,22 +9,34 @@ const Cart = require('../models/Cart');
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 
+/**
+ * Genera un token JWT para el usuario
+ * @param {Object} user - Usuario autenticado
+ * @returns {string} - Token JWT
+ */
 const generateToken = (user) => {
   return jwt.sign(
-    { id: user._id, email: user.email, role: user.role },
+    {
+      id: user._id,
+      email: user.email,
+      role: user.role,
+    },
     process.env.JWT_SECRET,
-    { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+    }
   );
 };
 
 /**
- * POST /api/auth/register
  * Registro de nuevo usuario
+ * POST /api/auth/register
  */
 const register = async (req, res) => {
   try {
     const { email, password, firstName, lastName, phone } = req.body;
 
+    // Validar campos obligatorios
     if (!email || !password || !firstName) {
       return res.status(400).json({
         success: false,
@@ -32,6 +44,7 @@ const register = async (req, res) => {
       });
     }
 
+    // Verificar si el usuario ya existe
     const existingUser = await User.findOne({ email: email.toLowerCase() });
     if (existingUser) {
       return res.status(400).json({
@@ -40,6 +53,7 @@ const register = async (req, res) => {
       });
     }
 
+    // Crear nuevo usuario
     const user = new User({
       email: email.toLowerCase(),
       password,
@@ -53,14 +67,18 @@ const register = async (req, res) => {
     // Crear carrito vacío para el usuario
     await Cart.create({ userId: user._id, items: [] });
 
+    // Generar token
     const token = generateToken(user);
 
+    // Respuesta exitosa
     res.status(201).json({
       success: true,
       message: 'Usuario registrado correctamente',
       token,
       user: user.toJSON(),
     });
+
+    console.log(`✅ Usuario registrado: ${user.email}`);
   } catch (error) {
     console.error('❌ Error en registro:', error.message);
     res.status(500).json({
@@ -72,13 +90,14 @@ const register = async (req, res) => {
 };
 
 /**
- * POST /api/auth/login
  * Inicio de sesión
+ * POST /api/auth/login
  */
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Validar campos obligatorios
     if (!email || !password) {
       return res.status(400).json({
         success: false,
@@ -86,6 +105,7 @@ const login = async (req, res) => {
       });
     }
 
+    // Buscar usuario por email
     const user = await User.findOne({ email: email.toLowerCase() });
     if (!user) {
       return res.status(401).json({
@@ -94,13 +114,15 @@ const login = async (req, res) => {
       });
     }
 
+    // Verificar si el usuario está activo
     if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        message: 'Usuario desactivado',
+        message: 'Usuario desactivado. Contacta al administrador.',
       });
     }
 
+    // Verificar contraseña
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -109,17 +131,22 @@ const login = async (req, res) => {
       });
     }
 
+    // Actualizar último login
     user.lastLogin = new Date();
     await user.save({ validateBeforeSave: false });
 
+    // Generar token
     const token = generateToken(user);
 
+    // Respuesta exitosa
     res.status(200).json({
       success: true,
       message: 'Autenticación satisfactoria',
       token,
       user: user.toJSON(),
     });
+
+    console.log(`✅ Login exitoso: ${user.email}`);
   } catch (error) {
     console.error('❌ Error en login:', error.message);
     res.status(500).json({
@@ -131,8 +158,8 @@ const login = async (req, res) => {
 };
 
 /**
- * GET /api/auth/verify
  * Verificar token JWT
+ * GET /api/auth/verify
  */
 const verifyToken = async (req, res) => {
   try {
@@ -170,8 +197,8 @@ const verifyToken = async (req, res) => {
 };
 
 /**
- * GET /api/auth/profile
  * Obtener perfil del usuario autenticado
+ * GET /api/auth/profile
  */
 const getProfile = async (req, res) => {
   try {
@@ -198,8 +225,8 @@ const getProfile = async (req, res) => {
 };
 
 /**
- * PUT /api/auth/profile
  * Actualizar perfil del usuario autenticado
+ * PUT /api/auth/profile
  */
 const updateProfile = async (req, res) => {
   try {
@@ -234,10 +261,32 @@ const updateProfile = async (req, res) => {
   }
 };
 
+/**
+ * Cerrar sesión (invalidar token en cliente)
+ * POST /api/auth/logout
+ */
+const logout = async (req, res) => {
+  try {
+    // El cliente debe eliminar el token localmente
+    res.status(200).json({
+      success: true,
+      message: 'Sesión cerrada correctamente',
+    });
+  } catch (error) {
+    console.error('❌ Error al cerrar sesión:', error.message);
+    res.status(500).json({
+      success: false,
+      message: 'Error al cerrar sesión',
+      error: error.message,
+    });
+  }
+};
+
 module.exports = {
   register,
   login,
   verifyToken,
   getProfile,
   updateProfile,
+  logout,
 };

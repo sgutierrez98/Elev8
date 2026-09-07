@@ -1,9 +1,3 @@
-/**
- * Modelo de Usuario - Elev8 API
- * @author Elev8 Sportswear Team
- * @version 1.0.0
- */
-
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt');
 
@@ -15,10 +9,6 @@ const UserSchema = new mongoose.Schema(
       unique: true,
       trim: true,
       lowercase: true,
-      match: [
-        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-        'Ingresa un correo electrónico válido',
-      ],
     },
     password: {
       type: String,
@@ -29,12 +19,10 @@ const UserSchema = new mongoose.Schema(
       type: String,
       required: [true, 'El nombre es obligatorio'],
       trim: true,
-      maxlength: [50, 'El nombre no puede tener más de 50 caracteres'],
     },
     lastName: {
       type: String,
       trim: true,
-      maxlength: [50, 'El apellido no puede tener más de 50 caracteres'],
     },
     phone: {
       type: String,
