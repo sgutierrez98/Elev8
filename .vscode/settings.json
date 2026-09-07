@@ -1,3 +1,16 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive"
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+    "files.associations": {
+        "*.jsx": "javascriptreact",
+        "*.css": "css"
+    },
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact",
+        "javascriptreact": "javascriptreact"
+    },
+    "java.compile.nullAnalysis.mode": "automatic",
+    "java.configuration.updateBuildConfiguration": "automatic"
 }

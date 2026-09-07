@@ -1,9 +1,3 @@
-/**
- * Modelo de Carrito - Elev8 API
- * @author Elev8 Sportswear Team
- * @version 1.0.0
- */
-
 const mongoose = require('mongoose');
 
 const CartItemSchema = new mongoose.Schema({

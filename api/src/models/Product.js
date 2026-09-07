@@ -1,9 +1,3 @@
-/**
- * Modelo de Producto - Elev8 API
- * @author Elev8 Sportswear Team
- * @version 1.0.0
- */
-
 const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema(
@@ -12,7 +6,6 @@ const ProductSchema = new mongoose.Schema(
       type: String,
       required: [true, 'El SKU es obligatorio'],
       unique: true,
-      trim: true,
       uppercase: true,
     },
     name: {
@@ -46,13 +39,12 @@ const ProductSchema = new mongoose.Schema(
     oldPrice: {
       type: Number,
       default: 0,
-      min: [0, 'El precio anterior no puede ser negativo'],
     },
     rating: {
       type: Number,
       default: 0,
-      min: [0, 'El rating no puede ser negativo'],
-      max: [5, 'El rating no puede ser mayor a 5'],
+      min: 0,
+      max: 5,
     },
     reviews: {
       type: Number,
@@ -66,7 +58,6 @@ const ProductSchema = new mongoose.Schema(
     brand: {
       type: String,
       default: 'Elev8',
-      trim: true,
     },
     description: {
       type: String,

@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
+    <!-- ... configuraciones existentes ... -->
+
+    <!-- Configuración de conexión a PostgreSQL -->
     <Resource name="jdbc/elev8"
               auth="Container"
               type="javax.sql.DataSource"
-              maxTotal="20"
-              maxIdle="10"
-              maxWaitMillis="10000"
               driverClassName="org.postgresql.Driver"
               url="jdbc:postgresql://localhost:5432/elev8_db"
               username="postgres"
-              password="123456"/>
+              password="123456"
+              maxTotal="20"
+              maxIdle="10"
+              maxWaitMillis="10000"
+              validationQuery="SELECT 1"/>
 </Context>
