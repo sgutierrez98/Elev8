@@ -8,6 +8,10 @@ const { expect } = require('chai');
 const sinon = require('sinon');
 const authController = require('../../src/controllers/authController');
 const User = require('../../src/models/User');
+const Cart = require('../../src/models/Cart');
+
+process.env.JWT_SECRET = process.env.JWT_SECRET || 'test-secret';
+process.env.JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '1d';
 
 describe('Auth Controller', () => {
   let req, res, sandbox;
@@ -56,6 +60,7 @@ describe('Auth Controller', () => {
       sandbox.stub(User, 'findOne').resolves(null);
       sandbox.stub(User.prototype, 'save').resolves(mockUser);
       sandbox.stub(User, 'create').resolves(mockUser);
+      sandbox.stub(Cart, 'create').resolves({});
 
       // Act
       await authController.register(req, res);
@@ -127,6 +132,7 @@ describe('Auth Controller', () => {
         email: 'test@elev8.com',
         firstName: 'Test',
         lastName: 'User',
+        isActive: true,
         comparePassword: sandbox.stub().resolves(true),
         save: sandbox.stub().resolves(),
         toJSON: () => ({
@@ -161,6 +167,7 @@ describe('Auth Controller', () => {
 
       const mockUser = {
         email: 'test@elev8.com',
+        isActive: true,
         comparePassword: sandbox.stub().resolves(false),
       };
 
