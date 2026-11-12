@@ -1,80 +1,289 @@
-const jwt = require('jsonwebtoken');
+/**
+ * Controlador de Autenticación - Elev8 API
+ * @author Elev8 Sportswear Team
+ * @version 2.0.0
+ */
+
 const User = require('../models/User');
+const jwt = require('jsonwebtoken');
+require('dotenv').config();
 
-const protect = async (req, res, next) => {
+const JWT_SECRET = process.env.JWT_SECRET || 'elev8_secret_key_2026';
+const JWT_EXPIRES_IN = process.env.JWT_EXPIRES_IN || '7d';
+
+/**
+ * Genera un token JWT para el usuario
+ */
+const generateToken = (user) => {
+    return jwt.sign(
+        {
+            id: user._id,
+            email: user.email,
+            role: user.role
+        },
+        JWT_SECRET,
+        { expiresIn: JWT_EXPIRES_IN }
+    );
+};
+
+/**
+ * POST /api/auth/register
+ * Registro de nuevo usuario
+ */
+const register = async (req, res) => {
     try {
-        let token;
+        const { email, password, firstName, lastName, phone } = req.body;
 
-        if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
-            token = req.headers.authorization.split(' ')[1];
-        }
-
-        if (!token) {
-            return res.status(401).json({
+        if (!email || !password || !firstName) {
+            return res.status(400).json({
                 success: false,
-                message: 'Token no proporcionado. Acceso denegado.'
+                message: 'Faltan campos obligatorios: email, password, firstName'
             });
         }
 
-        try {
-            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'elev8_secret_key_2026');
-            const user = await User.findById(decoded.id).select('-password');
-
-            if (!user) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Usuario no encontrado. Token inválido.'
-                });
-            }
-
-            if (!user.isActive) {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Usuario desactivado.'
-                });
-            }
-
-            req.user = user;
-            next();
-        } catch (jwtError) {
-            if (jwtError.name === 'JsonWebTokenError') {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Token inválido'
-                });
-            }
-
-            if (jwtError.name === 'TokenExpiredError') {
-                return res.status(401).json({
-                    success: false,
-                    message: 'Token expirado. Inicia sesión nuevamente.'
-                });
-            }
-
-            return res.status(401).json({
+        const existingUser = await User.findOne({ email: email.toLowerCase() });
+        if (existingUser) {
+            return res.status(400).json({
                 success: false,
-                message: 'Error al verificar token',
-                error: jwtError.message
+                message: 'El correo electrónico ya está registrado'
             });
         }
+
+        const user = new User({
+            email: email.toLowerCase(),
+            password,
+            firstName,
+            lastName: lastName || '',
+            phone: phone || ''
+        });
+
+        await user.save();
+
+        const token = generateToken(user);
+
+        res.status(201).json({
+            success: true,
+            message: 'Usuario registrado correctamente',
+            token,
+            user: user.toJSON()
+        });
+
+        console.log(`✅ Usuario registrado: ${user.email}`);
     } catch (error) {
+        console.error('❌ Error en registro:', error.message);
         res.status(500).json({
             success: false,
-            message: 'Error interno del servidor',
+            message: 'Error al registrar usuario',
             error: error.message
         });
     }
 };
 
-const admin = (req, res, next) => {
-    if (req.user && req.user.role === 'ADMIN') {
-        next();
-    } else {
-        res.status(403).json({
+/**
+ * POST /api/auth/login
+ * Inicio de sesión
+ */
+const login = async (req, res) => {
+    try {
+        const { email, password } = req.body;
+
+        if (!email || !password) {
+            return res.status(400).json({
+                success: false,
+                message: 'Email y contraseña son obligatorios'
+            });
+        }
+
+        const user = await User.findOne({ email: email.toLowerCase() });
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Correo o contraseña incorrectos'
+            });
+        }
+
+        if (!user.isActive) {
+            return res.status(401).json({
+                success: false,
+                message: 'Usuario desactivado. Contacta al administrador.'
+            });
+        }
+
+        const isPasswordValid = await user.comparePassword(password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
+                success: false,
+                message: 'Correo o contraseña incorrectos'
+            });
+        }
+
+        const token = generateToken(user);
+
+        res.status(200).json({
+            success: true,
+            message: 'Autenticación satisfactoria',
+            token,
+            user: user.toJSON()
+        });
+
+        console.log(`✅ Login exitoso: ${user.email}`);
+    } catch (error) {
+        console.error('❌ Error en login:', error.message);
+        res.status(500).json({
             success: false,
-            message: 'Acceso denegado. Se requiere rol de administrador.'
+            message: 'Error al iniciar sesión',
+            error: error.message
         });
     }
 };
 
-module.exports = { protect, admin };
+/**
+ * GET /api/auth/verify
+ * Verificar token JWT
+ */
+const verifyToken = async (req, res) => {
+    try {
+        const authHeader = req.headers.authorization;
+
+        if (!authHeader || !authHeader.startsWith('Bearer ')) {
+            return res.status(401).json({
+                success: false,
+                message: 'Token no proporcionado'
+            });
+        }
+
+        const token = authHeader.split(' ')[1];
+
+        const decoded = jwt.verify(token, JWT_SECRET);
+        const user = await User.findById(decoded.id);
+
+        if (!user) {
+            return res.status(401).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            user: user.toJSON()
+        });
+    } catch (error) {
+        console.error('❌ Error al verificar token:', error.message);
+
+        if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({
+                success: false,
+                message: 'Token inválido'
+            });
+        }
+
+        if (error.name === 'TokenExpiredError') {
+            return res.status(401).json({
+                success: false,
+                message: 'Token expirado. Inicia sesión nuevamente.'
+            });
+        }
+
+        res.status(401).json({
+            success: false,
+            message: 'Error al verificar token',
+            error: error.message
+        });
+    }
+};
+
+/**
+ * GET /api/auth/profile
+ * Obtener perfil del usuario autenticado
+ */
+const getProfile = async (req, res) => {
+    try {
+        const user = await User.findById(req.user.id);
+
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            user: user.toJSON()
+        });
+    } catch (error) {
+        console.error('❌ Error al obtener perfil:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Error al obtener perfil',
+            error: error.message
+        });
+    }
+};
+
+/**
+ * PUT /api/auth/profile
+ * Actualizar perfil del usuario autenticado
+ */
+const updateProfile = async (req, res) => {
+    try {
+        const { firstName, lastName, phone } = req.body;
+
+        const user = await User.findById(req.user.id);
+        if (!user) {
+            return res.status(404).json({
+                success: false,
+                message: 'Usuario no encontrado'
+            });
+        }
+
+        if (firstName) user.firstName = firstName;
+        if (lastName !== undefined) user.lastName = lastName;
+        if (phone !== undefined) user.phone = phone;
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: 'Perfil actualizado correctamente',
+            user: user.toJSON()
+        });
+    } catch (error) {
+        console.error('❌ Error al actualizar perfil:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Error al actualizar perfil',
+            error: error.message
+        });
+    }
+};
+
+/**
+ * POST /api/auth/logout
+ * Cerrar sesión (el cliente elimina el token)
+ */
+const logout = async (req, res) => {
+    try {
+        res.status(200).json({
+            success: true,
+            message: 'Sesión cerrada correctamente'
+        });
+    } catch (error) {
+        console.error('❌ Error al cerrar sesión:', error.message);
+        res.status(500).json({
+            success: false,
+            message: 'Error al cerrar sesión',
+            error: error.message
+        });
+    }
+};
+
+module.exports = {
+    register,
+    login,
+    verifyToken,
+    getProfile,
+    updateProfile,
+    logout
+};
