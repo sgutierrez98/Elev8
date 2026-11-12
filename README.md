@@ -29,7 +29,7 @@
 ---
 
 **Proyecto Formativo SENA - ADSO**  
-**GA6-220501096-AA4-EV03 | GA7 | GA8 | GA9**
+
 
 </div>
 
