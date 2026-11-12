@@ -4,12 +4,14 @@
  * @version 1.0.0
  * 
  * Correcciones aplicadas:
+ * - DEF-01: Rate limiting general y estricto para auth
  * - DEF-03: JSON malformado devuelve 400
  * - DEF-04: Cuerpo >100KB devuelve 413
  */
 
 const express = require('express');
 const cors = require('cors');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
@@ -25,6 +27,36 @@ app.use(express.json({ limit: '100kb' }));
 
 // URL-encoded con límite de tamaño
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
+
+// ==================== RATE LIMITING (DEF-01) ====================
+
+// Rate limiting general: 100 peticiones cada 15 minutos
+const generalLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 100,
+    message: {
+        success: false,
+        message: 'Demasiadas peticiones. Intenta de nuevo más tarde.'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Rate limiting estricto para autenticación: 10 intentos cada 15 minutos
+const authLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutos
+    max: 10,
+    message: {
+        success: false,
+        message: 'Demasiados intentos de autenticación. Intenta de nuevo en 15 minutos.'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+});
+
+// Aplicar rate limiting
+app.use('/api/', generalLimiter);
+app.use('/api/auth/', authLimiter);
 
 // ==================== RUTA PRINCIPAL ====================
 app.get('/', (req, res) => {
@@ -43,19 +75,16 @@ app.get('/', (req, res) => {
 
 // ==================== AUTENTICACIÓN ====================
 
-// Base de datos en memoria (para pruebas)
 let users = [];
 let userIdCounter = 1;
 
 /**
  * POST /api/auth/register
- * Registro de nuevo usuario
  */
 app.post('/api/auth/register', (req, res) => {
     try {
         const { email, password, firstName, lastName, phone } = req.body;
 
-        // Validar campos obligatorios
         if (!email || !password || !firstName) {
             return res.status(400).json({
                 success: false,
@@ -63,7 +92,6 @@ app.post('/api/auth/register', (req, res) => {
             });
         }
 
-        // Verificar si el email ya existe
         const existingUser = users.find(u => u.email === email.toLowerCase());
         if (existingUser) {
             return res.status(400).json({
@@ -72,7 +100,6 @@ app.post('/api/auth/register', (req, res) => {
             });
         }
 
-        // Crear nuevo usuario
         const newUser = {
             id: userIdCounter++,
             email: email.toLowerCase(),
@@ -87,10 +114,8 @@ app.post('/api/auth/register', (req, res) => {
 
         users.push(newUser);
 
-        // Generar token (simulado)
         const token = 'token_' + newUser.id + '_' + Date.now();
 
-        // Respuesta exitosa (sin incluir password)
         const userResponse = { ...newUser };
         delete userResponse.password;
 
@@ -114,13 +139,11 @@ app.post('/api/auth/register', (req, res) => {
 
 /**
  * POST /api/auth/login
- * Inicio de sesión
  */
 app.post('/api/auth/login', (req, res) => {
     try {
         const { email, password } = req.body;
 
-        // Validar campos
         if (!email || !password) {
             return res.status(400).json({
                 success: false,
@@ -128,7 +151,6 @@ app.post('/api/auth/login', (req, res) => {
             });
         }
 
-        // Buscar usuario
         const user = users.find(u => u.email === email.toLowerCase());
 
         if (!user) {
@@ -138,7 +160,6 @@ app.post('/api/auth/login', (req, res) => {
             });
         }
 
-        // Verificar contraseña
         if (user.password !== password) {
             return res.status(401).json({
                 success: false,
@@ -146,10 +167,8 @@ app.post('/api/auth/login', (req, res) => {
             });
         }
 
-        // Generar token
         const token = 'token_' + user.id + '_' + Date.now();
 
-        // Respuesta exitosa (sin password)
         const userResponse = { ...user };
         delete userResponse.password;
 
@@ -173,7 +192,6 @@ app.post('/api/auth/login', (req, res) => {
 
 /**
  * GET /api/auth/verify
- * Verificar token
  */
 app.get('/api/auth/verify', (req, res) => {
     try {
@@ -186,7 +204,6 @@ app.get('/api/auth/verify', (req, res) => {
             });
         }
 
-        // Buscar usuario por token (simulado)
         const userId = token.split('_')[1];
         const user = users.find(u => u.id === parseInt(userId));
 
@@ -216,237 +233,78 @@ app.get('/api/auth/verify', (req, res) => {
 // ==================== PRODUCTOS ====================
 
 const products = [
-    {
-        id: 1,
-        sku: 'ELV-CAM-001',
-        name: 'Camiseta Dry-Fit Pro',
-        category: 'Camisetas',
-        emoji: '👕',
-        price: 89900,
-        oldPrice: 109900,
-        rating: 4.8,
-        reviews: 124,
-        badge: 'POPULAR',
-        description: 'Camiseta de alto rendimiento'
-    },
-    {
-        id: 2,
-        sku: 'ELV-CAM-002',
-        name: 'Camiseta Compresión Elite',
-        category: 'Camisetas',
-        emoji: '👕',
-        price: 109900,
-        oldPrice: null,
-        rating: 4.5,
-        reviews: 87,
-        badge: 'NUEVO',
-        description: 'Camiseta de compresión'
-    },
-    {
-        id: 3,
-        sku: 'ELV-PAN-001',
-        name: 'Pantaloneta Running Elite',
-        category: 'Pantalonetas',
-        emoji: '🩳',
-        price: 75000,
-        oldPrice: 90000,
-        rating: 4.6,
-        reviews: 203,
-        badge: 'OFERTA',
-        description: 'Pantaloneta ligera'
-    },
-    {
-        id: 4,
-        sku: 'ELV-PAN-002',
-        name: 'Pantaloneta Ciclismo Pro',
-        category: 'Pantalonetas',
-        emoji: '🩳',
-        price: 98000,
-        oldPrice: null,
-        rating: 4.3,
-        reviews: 56,
-        badge: null,
-        description: 'Pantaloneta acolchada'
-    },
-    {
-        id: 5,
-        sku: 'ELV-LIC-001',
-        name: 'Licra Compresión Total',
-        category: 'Licras',
-        emoji: '🩱',
-        price: 120000,
-        oldPrice: 145000,
-        rating: 4.7,
-        reviews: 178,
-        badge: 'OFERTA',
-        description: 'Licra de compresión'
-    }
+    { id: 1, sku: 'ELV-CAM-001', name: 'Camiseta Dry-Fit Pro', category: 'Camisetas', emoji: '👕', price: 89900, oldPrice: 109900, rating: 4.8, reviews: 124, badge: 'POPULAR', description: 'Camiseta de alto rendimiento' },
+    { id: 2, sku: 'ELV-CAM-002', name: 'Camiseta Compresión Elite', category: 'Camisetas', emoji: '👕', price: 109900, oldPrice: null, rating: 4.5, reviews: 87, badge: 'NUEVO', description: 'Camiseta de compresión' },
+    { id: 3, sku: 'ELV-PAN-001', name: 'Pantaloneta Running Elite', category: 'Pantalonetas', emoji: '🩳', price: 75000, oldPrice: 90000, rating: 4.6, reviews: 203, badge: 'OFERTA', description: 'Pantaloneta ligera' },
+    { id: 4, sku: 'ELV-PAN-002', name: 'Pantaloneta Ciclismo Pro', category: 'Pantalonetas', emoji: '🩳', price: 98000, oldPrice: null, rating: 4.3, reviews: 56, badge: null, description: 'Pantaloneta acolchada' },
+    { id: 5, sku: 'ELV-LIC-001', name: 'Licra Compresión Total', category: 'Licras', emoji: '🩱', price: 120000, oldPrice: 145000, rating: 4.7, reviews: 178, badge: 'OFERTA', description: 'Licra de compresión' }
 ];
 
-/**
- * GET /api/products
- * Obtener todos los productos
- */
 app.get('/api/products', (req, res) => {
     try {
         const { category, onSale, search } = req.query;
         let result = [...products];
 
-        if (category) {
-            result = result.filter(p => p.category.toLowerCase() === category.toLowerCase());
-        }
+        if (category) result = result.filter(p => p.category.toLowerCase() === category.toLowerCase());
+        if (onSale === 'true') result = result.filter(p => p.oldPrice && p.oldPrice > p.price);
+        if (search) result = result.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.description.toLowerCase().includes(search.toLowerCase()));
 
-        if (onSale === 'true') {
-            result = result.filter(p => p.oldPrice && p.oldPrice > p.price);
-        }
-
-        if (search) {
-            result = result.filter(p =>
-                p.name.toLowerCase().includes(search.toLowerCase()) ||
-                p.description.toLowerCase().includes(search.toLowerCase())
-            );
-        }
-
-        res.json({
-            success: true,
-            data: result
-        });
+        res.json({ success: true, data: result });
     } catch (error) {
-        res.status(500).json({
-            success: false,
-            message: 'Error al obtener productos',
-            error: error.message
-        });
+        res.status(500).json({ success: false, message: 'Error al obtener productos', error: error.message });
     }
 });
 
-/**
- * GET /api/products/popular
- */
 app.get('/api/products/popular', (req, res) => {
     const limit = parseInt(req.query.limit) || 4;
-    const result = [...products]
-        .sort((a, b) => b.reviews - a.reviews)
-        .slice(0, limit);
-
-    res.json({
-        success: true,
-        data: result
-    });
+    const result = [...products].sort((a, b) => b.reviews - a.reviews).slice(0, limit);
+    res.json({ success: true, data: result });
 });
 
-/**
- * GET /api/products/onsale
- */
 app.get('/api/products/onsale', (req, res) => {
     const result = products.filter(p => p.oldPrice && p.oldPrice > p.price);
-    res.json({
-        success: true,
-        data: result
-    });
+    res.json({ success: true, data: result });
 });
 
-/**
- * GET /api/products/:id
- */
 app.get('/api/products/:id', (req, res) => {
     const id = parseInt(req.params.id);
     const product = products.find(p => p.id === id);
-
-    if (!product) {
-        return res.status(404).json({
-            success: false,
-            message: 'Producto no encontrado'
-        });
-    }
-
-    res.json({
-        success: true,
-        data: product
-    });
+    if (!product) return res.status(404).json({ success: false, message: 'Producto no encontrado' });
+    res.json({ success: true, data: product });
 });
 
 // ==================== CARRITO ====================
 
 let carts = {};
 
-/**
- * GET /api/cart
- */
 app.get('/api/cart', (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: 'Token no proporcionado'
-        });
-    }
-
+    if (!token) return res.status(401).json({ success: false, message: 'Token no proporcionado' });
     const cart = carts[token] || { items: [], subtotal: 0, totalItems: 0 };
-
-    res.json({
-        success: true,
-        cart: cart
-    });
+    res.json({ success: true, cart: cart });
 });
 
-/**
- * POST /api/cart/items
- */
 app.post('/api/cart/items', (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: 'Token no proporcionado'
-        });
-    }
+    if (!token) return res.status(401).json({ success: false, message: 'Token no proporcionado' });
 
     const { productId, quantity = 1, size = '', color = '' } = req.body;
     const product = products.find(p => p.id === productId);
+    if (!product) return res.status(404).json({ success: false, message: 'Producto no encontrado' });
 
-    if (!product) {
-        return res.status(404).json({
-            success: false,
-            message: 'Producto no encontrado'
-        });
-    }
+    if (!carts[token]) carts[token] = { items: [], subtotal: 0, totalItems: 0 };
 
-    if (!carts[token]) {
-        carts[token] = { items: [], subtotal: 0, totalItems: 0 };
-    }
-
-    const existingItem = carts[token].items.find(
-        i => i.productId === productId && i.size === size && i.color === color
-    );
-
+    const existingItem = carts[token].items.find(i => i.productId === productId && i.size === size && i.color === color);
     if (existingItem) {
         existingItem.quantity += quantity;
     } else {
-        carts[token].items.push({
-            productId: product.id,
-            name: product.name,
-            emoji: product.emoji,
-            price: product.price,
-            quantity: quantity,
-            size: size,
-            color: color
-        });
+        carts[token].items.push({ productId: product.id, name: product.name, emoji: product.emoji, price: product.price, quantity, size, color });
     }
 
-    // Calcular totales
-    carts[token].subtotal = carts[token].items.reduce(
-        (sum, item) => sum + (item.price * item.quantity), 0
-    );
-    carts[token].totalItems = carts[token].items.reduce(
-        (sum, item) => sum + item.quantity, 0
-    );
+    carts[token].subtotal = carts[token].items.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+    carts[token].totalItems = carts[token].items.reduce((sum, item) => sum + item.quantity, 0);
 
-    res.json({
-        success: true,
-        message: 'Producto agregado al carrito',
-        cart: carts[token]
-    });
+    res.json({ success: true, message: 'Producto agregado al carrito', cart: carts[token] });
 });
 
 // ==================== PEDIDOS ====================
@@ -454,90 +312,51 @@ app.post('/api/cart/items', (req, res) => {
 let orders = [];
 let orderCounter = 1;
 
-/**
- * POST /api/orders
- */
 app.post('/api/orders', (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: 'Token no proporcionado'
-        });
-    }
+    if (!token) return res.status(401).json({ success: false, message: 'Token no proporcionado' });
 
     const cart = carts[token];
-    if (!cart || cart.items.length === 0) {
-        return res.status(400).json({
-            success: false,
-            message: 'El carrito está vacío'
-        });
-    }
+    if (!cart || cart.items.length === 0) return res.status(400).json({ success: false, message: 'El carrito está vacío' });
 
     const { shippingAddress, paymentMethod = 'Tarjeta' } = req.body;
+    if (!shippingAddress || !shippingAddress.address) return res.status(400).json({ success: false, message: 'Dirección de envío incompleta' });
 
-    if (!shippingAddress || !shippingAddress.address) {
-        return res.status(400).json({
-            success: false,
-            message: 'Dirección de envío incompleta'
-        });
-    }
-
-    const orderNumber = 'ELV-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') +
-        '-' + String(orderCounter++).padStart(4, '0');
+    const orderNumber = 'ELV-' + new Date().toISOString().slice(0, 10).replace(/-/g, '') + '-' + String(orderCounter++).padStart(4, '0');
 
     const order = {
         id: orders.length + 1,
-        orderNumber: orderNumber,
+        orderNumber,
         items: cart.items,
         subtotal: cart.subtotal,
         shippingCost: cart.subtotal >= 150000 ? 0 : 8000,
         discount: 0,
         total: cart.subtotal + (cart.subtotal >= 150000 ? 0 : 8000),
         status: 'PENDING',
-        paymentMethod: paymentMethod,
-        shippingAddress: shippingAddress,
+        paymentMethod,
+        shippingAddress,
         createdAt: new Date().toISOString()
     };
 
     orders.push(order);
     delete carts[token];
 
-    res.status(201).json({
-        success: true,
-        message: 'Pedido creado correctamente',
-        order: order
-    });
+    res.status(201).json({ success: true, message: 'Pedido creado correctamente', order });
 });
 
-/**
- * GET /api/orders
- */
 app.get('/api/orders', (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
-    if (!token) {
-        return res.status(401).json({
-            success: false,
-            message: 'Token no proporcionado'
-        });
-    }
-
-    res.json({
-        success: true,
-        orders: orders
-    });
+    if (!token) return res.status(401).json({ success: false, message: 'Token no proporcionado' });
+    res.json({ success: true, orders });
 });
 
 // ==================== MANEJADOR DE ERRORES GLOBAL ====================
-// CORRECCIÓN DEF-03 y DEF-04
 
 app.use((err, req, res, next) => {
     console.error('❌ Error global:', err.message);
     
-    // Usar el status del error si existe, sino 500
     const status = err.status || err.statusCode || 500;
     
-    // Manejar errores específicos de Express body-parser
     if (err.type === 'entity.parse.failed') {
         return res.status(400).json({
             success: false,
@@ -552,7 +371,6 @@ app.use((err, req, res, next) => {
         });
     }
     
-    // Respuesta genérica para otros errores
     res.status(status).json({
         success: false,
         message: status === 500 ? 'Error interno del servidor' : err.message,
@@ -570,6 +388,7 @@ app.listen(PORT, () => {
     console.log(`   🛒 Cart: http://localhost:${PORT}/api/cart`);
     console.log(`   📋 Orders: http://localhost:${PORT}/api/orders`);
     console.log(`\n✅ Correcciones aplicadas:`);
+    console.log(`   DEF-01: Rate limiting (100 req/15min general, 10 req/15min auth)`);
     console.log(`   DEF-03: JSON malformado → 400 Bad Request`);
     console.log(`   DEF-04: Cuerpo >100KB → 413 Payload Too Large`);
 });
