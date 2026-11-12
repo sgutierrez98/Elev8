@@ -8,6 +8,7 @@
  * - DEF-03: JSON malformado devuelve 400
  * - DEF-04: Cuerpo >100KB devuelve 413
  * - DEF-05: Cabeceras de seguridad HTTP con helmet
+ * - DEF-06: Logs sin datos sensibles
  * - DEF-07: X-Powered-By eliminado
  */
 
@@ -19,6 +20,31 @@ require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// ==================== UTILIDADES DE LOGS (DEF-06) ====================
+
+const isDev = process.env.NODE_ENV === 'development';
+
+/**
+ * Enmascara un email para logs seguros
+ * Ejemplo: "test@elev8.com" → "te***@elev8.com"
+ */
+const maskEmail = (email) => {
+    if (!email) return 'N/A';
+    const [user, domain] = email.split('@');
+    if (user.length <= 2) return `***@${domain}`;
+    return `${user.substring(0, 2)}***@${domain}`;
+};
+
+/**
+ * Enmascara un token para logs seguros
+ * Ejemplo: "token_1_1234567890" → "tok***890"
+ */
+const maskToken = (token) => {
+    if (!token) return 'N/A';
+    if (token.length <= 8) return '***';
+    return `${token.substring(0, 3)}***${token.substring(token.length - 3)}`;
+};
 
 // ==================== MIDDLEWARES ====================
 
@@ -144,13 +170,17 @@ app.post('/api/auth/register', (req, res) => {
             user: userResponse
         });
 
-        console.log(`✅ Usuario registrado: ${email}`);
+        if (isDev) {
+            console.log(`✅ Usuario registrado: ${maskEmail(email)}`);
+        }
     } catch (error) {
-        console.error('❌ Error en registro:', error.message);
+        if (isDev) {
+            console.error('❌ Error en registro:', error.message);
+        }
         res.status(500).json({
             success: false,
             message: 'Error al registrar usuario',
-            error: error.message
+            error: isDev ? error.message : undefined
         });
     }
 });
@@ -194,13 +224,17 @@ app.post('/api/auth/login', (req, res) => {
             user: userResponse
         });
 
-        console.log(`✅ Login exitoso: ${email}`);
+        if (isDev) {
+            console.log(`✅ Login exitoso: ${maskEmail(email)}`);
+        }
     } catch (error) {
-        console.error('❌ Error en login:', error.message);
+        if (isDev) {
+            console.error('❌ Error en login:', error.message);
+        }
         res.status(500).json({
             success: false,
             message: 'Error al iniciar sesión',
-            error: error.message
+            error: isDev ? error.message : undefined
         });
     }
 });
@@ -237,7 +271,7 @@ app.get('/api/auth/verify', (req, res) => {
         res.status(401).json({
             success: false,
             message: 'Token inválido',
-            error: error.message
+            error: isDev ? error.message : undefined
         });
     }
 });
@@ -263,7 +297,7 @@ app.get('/api/products', (req, res) => {
 
         res.json({ success: true, data: result });
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Error al obtener productos', error: error.message });
+        res.status(500).json({ success: false, message: 'Error al obtener productos', error: isDev ? error.message : undefined });
     }
 });
 
@@ -365,7 +399,9 @@ app.get('/api/orders', (req, res) => {
 // ==================== MANEJADOR DE ERRORES GLOBAL ====================
 
 app.use((err, req, res, next) => {
-    console.error('❌ Error global:', err.message);
+    if (isDev) {
+        console.error('❌ Error global:', err.message);
+    }
     
     const status = err.status || err.statusCode || 500;
     
@@ -386,7 +422,7 @@ app.use((err, req, res, next) => {
     res.status(status).json({
         success: false,
         message: status === 500 ? 'Error interno del servidor' : err.message,
-        error: process.env.NODE_ENV === 'development' ? err.message : undefined,
+        error: isDev ? err.message : undefined,
     });
 });
 
@@ -404,5 +440,7 @@ app.listen(PORT, () => {
     console.log(`   DEF-03: JSON malformado → 400 Bad Request`);
     console.log(`   DEF-04: Cuerpo >100KB → 413 Payload Too Large`);
     console.log(`   DEF-05: Cabeceras de seguridad con helmet`);
+    console.log(`   DEF-06: Logs sin datos sensibles (emails enmascarados)`);
     console.log(`   DEF-07: X-Powered-By eliminado`);
+    console.log(`\n🔧 Modo: ${isDev ? 'DESARROLLO (logs detallados)' : 'PRODUCCIÓN (logs mínimos)'}`);
 });
