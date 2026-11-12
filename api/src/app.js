@@ -24,7 +24,7 @@ const PORT = process.env.PORT || 5000;
 
 // ==================== SEGURIDAD ====================
 
-// Helmet
+// Helmet: cabeceras de seguridad
 app.use(helmet());
 
 // CORS
@@ -33,9 +33,11 @@ app.use(cors({
     credentials: true
 }));
 
-// Límite general
+// ==================== RATE LIMITING (CORREGIDO DEF-11) ====================
+
+// Límite general para todas las rutas de la API
 const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 15 * 60 * 1000, // 15 minutos
     max: 100,
     message: {
         success: false,
@@ -45,9 +47,9 @@ const generalLimiter = rateLimit({
     legacyHeaders: false
 });
 
-// Límite estricto para login y registro
+// Límite estricto SOLO para login y registro
 const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000,
+    windowMs: 15 * 60 * 1000, // 15 minutos
     max: 10,
     message: {
         success: false,
@@ -57,11 +59,17 @@ const authLimiter = rateLimit({
     legacyHeaders: false
 });
 
+// Aplicar límite general a todas las rutas de la API
 app.use('/api/', generalLimiter);
+
+// Aplicar límite estricto SOLO a login y registro
 app.use('/api/auth/login', authLimiter);
 app.use('/api/auth/register', authLimiter);
 
-// Body parser con límite de 100KB
+// NOTA: /api/auth/verify y /api/auth/profile NO tienen el límite estricto
+
+// ==================== BODY PARSER ====================
+
 app.use(express.json({ limit: '100kb' }));
 app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
@@ -99,7 +107,7 @@ app.use('/api/orders', orderRoutes);
 
 // ==================== MANEJO DE ERRORES ====================
 
-// Ruta no encontrada
+// Ruta no encontrada (404)
 app.use((req, res) => {
     res.status(404).json({
         success: false,
@@ -107,7 +115,7 @@ app.use((req, res) => {
     });
 });
 
-// Error de JSON malformado
+// Error de JSON malformado (400) o cuerpo demasiado grande (413)
 app.use((err, req, res, next) => {
     if (err.type === 'entity.parse.failed') {
         return res.status(400).json({
