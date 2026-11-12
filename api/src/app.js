@@ -7,17 +7,41 @@
  * - DEF-01: Rate limiting general y estricto para auth
  * - DEF-03: JSON malformado devuelve 400
  * - DEF-04: Cuerpo >100KB devuelve 413
+ * - DEF-05: Cabeceras de seguridad HTTP con helmet
+ * - DEF-07: X-Powered-By eliminado
  */
 
 const express = require('express');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
+const helmet = require('helmet');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
 // ==================== MIDDLEWARES ====================
+
+// Deshabilitar X-Powered-By (DEF-07)
+app.disable('x-powered-by');
+
+// Helmet: Cabeceras de seguridad HTTP (DEF-05)
+app.use(helmet({
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
+            scriptSrc: ["'self'"],
+            imgSrc: ["'self'", "data:", "https:"],
+            connectSrc: ["'self'"],
+            fontSrc: ["'self'"],
+            objectSrc: ["'none'"],
+            frameSrc: ["'none'"],
+        },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+}));
 
 // CORS
 app.use(cors());
@@ -30,9 +54,8 @@ app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // ==================== RATE LIMITING (DEF-01) ====================
 
-// Rate limiting general: 100 peticiones cada 15 minutos
 const generalLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutos
+    windowMs: 15 * 60 * 1000,
     max: 100,
     message: {
         success: false,
@@ -42,9 +65,8 @@ const generalLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-// Rate limiting estricto para autenticación: 10 intentos cada 15 minutos
 const authLimiter = rateLimit({
-    windowMs: 15 * 60 * 1000, // 15 minutos
+    windowMs: 15 * 60 * 1000,
     max: 10,
     message: {
         success: false,
@@ -54,7 +76,6 @@ const authLimiter = rateLimit({
     legacyHeaders: false,
 });
 
-// Aplicar rate limiting
 app.use('/api/', generalLimiter);
 app.use('/api/auth/', authLimiter);
 
@@ -78,9 +99,6 @@ app.get('/', (req, res) => {
 let users = [];
 let userIdCounter = 1;
 
-/**
- * POST /api/auth/register
- */
 app.post('/api/auth/register', (req, res) => {
     try {
         const { email, password, firstName, lastName, phone } = req.body;
@@ -137,9 +155,6 @@ app.post('/api/auth/register', (req, res) => {
     }
 });
 
-/**
- * POST /api/auth/login
- */
 app.post('/api/auth/login', (req, res) => {
     try {
         const { email, password } = req.body;
@@ -190,9 +205,6 @@ app.post('/api/auth/login', (req, res) => {
     }
 });
 
-/**
- * GET /api/auth/verify
- */
 app.get('/api/auth/verify', (req, res) => {
     try {
         const token = req.headers.authorization?.split(' ')[1];
@@ -391,4 +403,6 @@ app.listen(PORT, () => {
     console.log(`   DEF-01: Rate limiting (100 req/15min general, 10 req/15min auth)`);
     console.log(`   DEF-03: JSON malformado → 400 Bad Request`);
     console.log(`   DEF-04: Cuerpo >100KB → 413 Payload Too Large`);
+    console.log(`   DEF-05: Cabeceras de seguridad con helmet`);
+    console.log(`   DEF-07: X-Powered-By eliminado`);
 });
