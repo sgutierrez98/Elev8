@@ -38,7 +38,7 @@ app.use(cors({
 // Límite general para todas las rutas de la API
 const generalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100,
+    max: Number(process.env.RATE_LIMIT_MAX) || 100,
     message: {
         success: false,
         message: 'Demasiadas peticiones. Intenta más tarde.'
@@ -75,10 +75,6 @@ app.use(express.urlencoded({ extended: true, limit: '100kb' }));
 
 // Ocultar X-Powered-By
 app.disable('x-powered-by');
-
-// ==================== CONEXIÓN MONGODB ====================
-
-connectDB();
 
 // ==================== RUTAS ====================
 
@@ -140,14 +136,20 @@ app.use((err, req, res, next) => {
 });
 
 // ==================== INICIAR SERVIDOR ====================
+// RC-11: solo se conecta a MongoDB y abre el puerto si se ejecuta directamente
+// (node src/app.js). Al importar app desde las pruebas no se hace ninguna de las dos.
 
-app.listen(PORT, () => {
-    console.log(`✅ Servidor API corriendo en http://localhost:${PORT}`);
-    console.log(`📋 Endpoints disponibles:`);
-    console.log(`   🔐 Auth: http://localhost:${PORT}/api/auth`);
-    console.log(`   📦 Products: http://localhost:${PORT}/api/products`);
-    console.log(`   🛒 Cart: http://localhost:${PORT}/api/cart`);
-    console.log(`   📋 Orders: http://localhost:${PORT}/api/orders`);
-});
+if (require.main === module) {
+    connectDB();
+
+    app.listen(PORT, () => {
+        console.log(`✅ Servidor API corriendo en http://localhost:${PORT}`);
+        console.log(`📋 Endpoints disponibles:`);
+        console.log(`   🔐 Auth: http://localhost:${PORT}/api/auth`);
+        console.log(`   📦 Products: http://localhost:${PORT}/api/products`);
+        console.log(`   🛒 Cart: http://localhost:${PORT}/api/cart`);
+        console.log(`   📋 Orders: http://localhost:${PORT}/api/orders`);
+    });
+}
 
 module.exports = app;

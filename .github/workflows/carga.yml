@@ -1,0 +1,102 @@
+name: Prueba de carga PC-04
+
+on:
+  push:
+    branches: ['fix/**']
+    paths:
+      - '.github/workflows/carga.yml'
+      - 'api/src/**'
+  workflow_dispatch:
+
+jobs:
+  carga:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:7
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --quiet --eval 'db.runCommand({ping:1}).ok'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: api
+
+    env:
+      PORT: 5000
+      NODE_ENV: test
+      MONGODB_URI: mongodb://localhost:27017/elev8_carga
+      JWT_SECRET: secreto-solo-para-pruebas
+      CORS_ORIGIN: http://localhost:3000
+      RATE_LIMIT_MAX: 1000000
+
+    steps:
+      - name: Descargar el código
+        uses: actions/checkout@v4
+
+      - name: Preparar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: api/package-lock.json
+
+      - name: Instalar dependencias
+        run: npm ci
+
+      - name: Iniciar la API
+        run: |
+          node src/app.js > ../api.log 2>&1 &
+          for i in $(seq 1 30); do
+            curl -s http://localhost:5000/ > /dev/null && break
+            sleep 1
+          done
+          curl -s http://localhost:5000/
+
+      - name: Carga sobre GET /api/products
+        run: npx --yes autocannon@7.15.0 -c 50 -d 30 -j http://localhost:5000/api/products > ../carga-products.json
+
+      - name: Carga sobre GET /api/categories
+        run: npx --yes autocannon@7.15.0 -c 50 -d 30 -j http://localhost:5000/api/categories > ../carga-categories.json
+
+      - name: Evaluar resultados contra los criterios
+        run: |
+          node - <<'EOF'
+          const fs = require('fs');
+          const pruebas = [
+            ['GET /api/products', '../carga-products.json'],
+            ['GET /api/categories', '../carga-categories.json']
+          ];
+          let aprobado = true;
+          let md = '## Resultado de la prueba de carga PC-04\n\n';
+          md += '50 usuarios simultáneos durante 30 s por endpoint. Criterios: fallos < 1 % y percentil 97,5 < 800 ms.\n\n';
+          md += '| Endpoint | Peticiones | Req/s prom. | Latencia prom. (ms) | p97,5 (ms) | p99 (ms) | Fallos | % fallos | Veredicto |\n';
+          md += '|---|---|---|---|---|---|---|---|---|\n';
+          for (const [nombre, archivo] of pruebas) {
+            const r = JSON.parse(fs.readFileSync(archivo, 'utf8'));
+            const total = r.requests.total;
+            const fallos = r.errors + r.timeouts + r.non2xx;
+            const pct = total ? (fallos / total) * 100 : 100;
+            const cumple = pct < 1 && r.latency.p97_5 < 800;
+            if (!cumple) aprobado = false;
+            md += `| ${nombre} | ${total} | ${r.requests.average} | ${r.latency.average} | ${r.latency.p97_5} | ${r.latency.p99} | ${fallos} | ${pct.toFixed(2)} | ${cumple ? 'CUMPLE' : 'NO CUMPLE'} |\n`;
+          }
+          console.log(md);
+          fs.appendFileSync(process.env.GITHUB_STEP_SUMMARY, md);
+          process.exit(aprobado ? 0 : 1);
+          EOF
+
+      - name: Guardar resultados
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: resultados-carga-pc04
+          path: |
+            carga-products.json
+            carga-categories.json
+            api.log
