@@ -6,6 +6,7 @@
 
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+const maskEmail = require('../utils/maskEmail'); // RC-09
 require('dotenv').config();
 
 const JWT_SECRET = process.env.JWT_SECRET || 'elev8_secret_key_2026';
@@ -68,7 +69,7 @@ const register = async (req, res) => {
             user: user.toJSON()
         });
 
-        console.log(`✅ Usuario registrado: ${user.email}`);
+        console.log(`✅ Usuario registrado: ${maskEmail(user.email)}`); // RC-09
     } catch (error) {
         console.error('❌ Error en registro:', error.message);
         res.status(500).json({
@@ -126,7 +127,7 @@ const login = async (req, res) => {
             user: user.toJSON()
         });
 
-        console.log(`✅ Login exitoso: ${user.email}`);
+        console.log(`✅ Login exitoso: ${maskEmail(user.email)}`); // RC-09
     } catch (error) {
         console.error('❌ Error en login:', error.message);
         res.status(500).json({
