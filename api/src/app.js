@@ -38,7 +38,7 @@ app.use(cors({
 // Límite general para todas las rutas de la API
 const generalLimiter = rateLimit({
     windowMs: 15 * 60 * 1000, // 15 minutos
-    max: 100,
+    max: Number(process.env.RATE_LIMIT_MAX) || 100,
     message: {
         success: false,
         message: 'Demasiadas peticiones. Intenta más tarde.'
